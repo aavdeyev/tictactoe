@@ -1,0 +1,50 @@
+from Crypto.Cipher import DES
+
+######################################################################
+#
+# The global proc to encrypt a string using DES8
+#
+######################################################################
+
+def encryptStrDES8(strText, securityKey):
+
+    # Since DES8 will only work with byte octets, we need to right-pad
+    # the security key and the string 
+    securityKey = str(securityKey)
+    # The max allowed security key for this encryption type is 8,
+    # so we will right-pad securityKey to 8
+    securityKey = securityKey.ljust(8)
+
+    strText = str(strText)
+    # Right-pad the string to the multiple of 8
+    ljust_size = ((len(strText) / 8) + 1) * 8
+    strText = strText.ljust(ljust_size)
+
+    des = DES.new(securityKey, DES.MODE_ECB)
+    strEncryptDes = des.encrypt(strText)
+    strEncryptDesASCII = strEncryptDes.encode('hex')
+    
+    return strEncryptDesASCII
+          
+######################################################################
+#
+# The global proc to decrypt a DES8-encrypted string
+#
+#####################################################################
+
+def decryptStrDES8(strEncryptASCII, securityKey):
+
+    # Since DES8 will only work with byte octets, we need to right-pad
+    # the security key before passing it over to DES
+    securityKey = str(securityKey)
+    securityKey = securityKey.ljust(8)
+
+    des = DES.new(securityKey, DES.MODE_ECB)
+    strEncryptDes = strEncryptASCII.decode('hex')
+    strDecr = des.decrypt(strEncryptDes)
+ 
+    # The string we get from DEC may have some trailing spaces, because 
+    # DES only works with byte octets, and we need to strip them off here
+    strDecr = strDecr.strip()
+
+    return strDecr

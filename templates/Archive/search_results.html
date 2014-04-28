@@ -1,0 +1,11 @@
+{% if resultObjects %} 
+    <p>found {{ resultObjects|length }} object{{ resultObject|pluralize }}.</p>
+
+    <ul>
+        {% for curObject in resultObjects %}
+        <li>{{ curObject.userPasswd }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No passwords matched your criteria.</p>
+{% endif %}
