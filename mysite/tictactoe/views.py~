@@ -63,6 +63,37 @@ def register_success(request) :
 
     return render_to_response('register_success.html')
 
-# def tictactoe_main(request) :
+def tictactoe(request) :
+
+    if not request.user.is_authenticated() :
+
+        # Unathenticated user, redirect the user to the login page
+        return render_to_response('login.html',
+                context_instance=RequestContext(request))
+
+    if request.method == "POST" :
+        
+        if "sqr1" in request.POST :
+            request.session["sqr1"] = "X"
+        if "sqr2" in request.POST :
+            request.session["sqr2"] = "X"
+        if "sqr3" in request.POST :
+            request.session["sqr3"] = "X"
+        if "sqr4" in request.POST :
+            request.session["sqr4"] = "X"
+        if "sqr5" in request.POST :
+            request.session["sqr5"] = "X"
+        if "sqr6" in request.POST :
+            request.session["sqr6"] = "X"
+        if "sqr7" in request.POST :
+            request.session["sqr7"] = "X"
+        if "sqr8" in request.POST :
+            request.session["sqr8"] = "X"
+        if "sqr9" in request.POST :
+            request.session["sqr9"] = "X"
+
+    return render_to_response('tictactoe.html',\
+            {session : request.session},\
+            context_instance=RequestContext(request))
         
 

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+{% if user.is_authenticated %}
+
+<title> Tic-Tac-Toe </title>
+
+<head>
+<style "media=screen" type="text/css"> 
+    .tttbutton {width:5em; height:5em; text-align:center; vertical-align:center; display:inline-block;} 
+</style>
+</head>
+
+<body>
+
+<form action="" method="post"> {% csrf_token %}
+
+  <div id="tttpanel" style="width:15em; height:15em; margin-top:1em; margin-left:1em; text-align:center; vertical-align:center">
+      <input type="submit" name="sqr1" class="tttbutton" value="{{session.sqr1}}">
+      <input type="submit" name="sqr2" class="tttbutton" value="{{session.sqr2}}">
+      <input type="submit" name="sqr3" class="tttbutton" value="{{session.sqr3}}">
+      <input type="submit" name="sqr4" class="tttbutton" value="{{session.sqr4}}">
+      <input type="submit" name="sqr5" class="tttbutton" value="{{session.sqr5}}">
+      <input type="submit" name="sqr6" class="tttbutton" value="{{session.sqr6}}">
+      <input type="submit" name="sqr7" class="tttbutton" value="{{session.sqr7}}">
+      <input type="submit" name="sqr8" class="tttbutton" value="{{session.sqr8}}">
+      <input type="submit" name="sqr9" class="tttbutton" value="{{session.sqr9}}">
+   </div>
+
+</form>
+</body>
+
+{% endif %}
