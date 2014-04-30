@@ -1,7 +1,5 @@
 def check_you_win(session) :
 
-    print ("Entering check_you_win")
-
     sqr1 = session.get('sqr1',"").upper()
     sqr2 = session.get('sqr2',"").upper()
     sqr3 = session.get('sqr3',"").upper()
@@ -18,12 +16,8 @@ def check_you_win(session) :
             or (sqr3 + sqr6 + sqr9 == "XXX") or (sqr1 + sqr5 + sqr9 == "XXX")\
             or (sqr3 + sqr5 + sqr7 == "XXX") :
 
-        print("Victory")
-
         return True
-    else : 
-        print("Loss")
-      
+    else :              
         return False
 
 

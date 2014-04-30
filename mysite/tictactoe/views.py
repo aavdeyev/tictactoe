@@ -10,7 +10,7 @@ from django.contrib.auth.forms import UserCreationForm
 
 from django.contrib.auth.models import User
 
-from models import check_you_win
+from tictactoelib import *
 
 def login(request) :
 
@@ -92,12 +92,37 @@ def tictactoe(request) :
         if "sqr9" in request.POST :
             request.session["sqr9"] = "X"
 
-        if check_you_win(request.session) == True : 
-            #----------------------------------------           
-            # The user won
-            #----------------------------------------
-            request.session["status"] = "YOUWIN"
+        if check_user_won(request.session) == True :          
 
+            # The user won            
+            request.session["status"] = "USERWON"
+ 
+        else :
+            try_result_offense = try_offense(request.session)
+         
+            if try_result_offense["success"] == False :
+                try_result_defense = try_defense(request.session)
+
+                if try_result_defense["success"] == False :
+                    try_result_random = try_random(request.session)
+                    request.session = try_result_random["session"]
+                    if check_user_lost(request.session) :
+                        # The user lost
+                        request.session["status"] = "USERLOST"
+                    
+                else :
+                    request.session = try_result_defense["session"]                    
+                    if check_user_lost(request.session) :
+                        # The user lost
+                        request.session["status"] = "USERLOST"
+                        
+            else :
+                request.session = try_result_offense["session"]
+                if check_user_lost(request.session) :
+                    # The user lost
+                    request.session["status"] = "USERLOST"
+
+        if request.session["status"] in {"USERWON", "USERLOST"} :
             # Clear the buttons for a new game
             request.session["sqr1"] = ""
             request.session["sqr2"] = ""
@@ -108,7 +133,7 @@ def tictactoe(request) :
             request.session["sqr7"] = ""
             request.session["sqr8"] = ""
             request.session["sqr9"] = ""
-                     
+                    
     return render_to_response('tictactoe.html',\
             {'session' : request.session, 'status'\
                 : request.session["status"]},\
