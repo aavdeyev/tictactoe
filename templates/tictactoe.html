@@ -38,16 +38,16 @@
 
    {% endif %}
 
-   {% if status|upper == 'USERWON' %}
-      <script type="text/javascript">
+   <script type="text/javascript">
+      {% if status|upper == 'USERWON' %}
          alert ("You win!")                       
-      </script>
-   {% elif status|upper == 'USERLOST' %}
-       <script type="text/javascript">
+      {% elif status|upper == 'USERLOST' %}
          alert ("You lose!")
-       </script>
-   {% endif %}
-
+      {% elif status|upper == 'DRAW' %}
+         alert ("Draw!")
+      {% endif %}
+   </script>
+   
 {% endif %}
 
 

@@ -13,7 +13,7 @@ urlpatterns = patterns('',
     url(r'^accounts/auth/$', 'tictactoe.views.auth_view'),
     url(r'^accounts/loggedin/$', 'tictactoe.views.loggedin'),
     url(r'^accounts/register/$', 'tictactoe.views.register_user'),
-    url(r'^accounts/register_success/$', 'tictactoe.views.register_success'),
+    url(r'^accounts/register_success/$', 'tictactoe.views.register_success/$'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^tictactoe/', include('tictactoe.urls')),
 )

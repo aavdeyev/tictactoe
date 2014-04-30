@@ -60,7 +60,7 @@ def check_draw(session) :
     else :
         return False
 
-def try_offense(session) :
+def try_attack(session) :
 
     sqr1 = session.get('sqr1',"").upper()
     sqr2 = session.get('sqr2',"").upper()
