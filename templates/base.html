@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+<title> Tic-Tac-Toe </title>
+
+<head>
+<style type = "text/css">
+
+    body, html {
+        margin:0
+        padding:0
+    }
+
+    #container {
+        width:100%;
+        height:100%;
+        background:#DDDDDD;
+    }
+
+    #header {
+        background-color:#666666;
+        width:100%;
+    }
+
+    #sidebar {
+        float:left;              
+        width:25%;
+        height:35em;
+        background:#999999;
+    }
+
+    #button_area {
+        position:absolute;
+        left:30%;
+        top:8em;
+        width:15em;
+        height:15em;
+        background:#DDDDDD;     
+    }
+
+    #footer {
+         background:#666666;
+         clear:both;
+         text-align:center;"
+    
+</style>
+
+</head>
+
+<body>
+
+<div id ="container">  
+    <div id="header">
+        <h1 style="margin-bottom:0;padding-top:0.5em; padding-bottom:0.5em;text-align:left;text-indent:1em;"> Tic-Tac-Toe </h1>
+    </div>  
+
+    <div id="sidebar">
+        <p style = "margin-top:0;padding-top:2em;text-align:center;">
+            {% block sidebar %} 
+            {% endblock %}            
+        </p>                      
+    </div>
+
+    <div id="button_area">
+        <p>
+            {% block button_area %}
+            {% endblock %}
+        </p> 
+    </div>
+
+    <div id="footer">
+        <p style = "margin-top:0;padding-top:0.5em;margin-bottom:0;padding-bottom:0.5em;text-align:center">
+            Version 1.0
+        </p>
+    </div>
+</div>
+
+</body>
+

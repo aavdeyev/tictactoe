@@ -1,5 +1,13 @@
 <!DOCTYPE html>
 
+{% extends "base.html" %}
+
+{% block sidebar %}
+    <a href = "/accounts/logout"> logout </a>
+{% endblock %}
+
+{% block button_area %}
+
 {% if user.is_authenticated %}
 
    {% if form.errors %}
@@ -9,33 +17,24 @@
 
    {% else %} 
      
-      <title> Tic-Tac-Toe </title>
-
-      <head>
       <style "media=screen" type="text/css"> 
           .tttbutton {width:5em; height:5em; text-align:center; vertical-align:center; display:inline-block;} 
       </style>
-      </head>
-
-      <body>
-
+    
       <form action="" method="post"> {% csrf_token %}
 
-        <div id="tttpanel" style="width:15em; height:15em; margin-top:1em; margin-left:1em; text-align:center; vertical-align:center">
-            <input type="submit" name="sqr1" class="tttbutton" value="{{session.sqr1|upper}}">
-            <input type="submit" name="sqr2" class="tttbutton" value="{{session.sqr2|upper}}">
-            <input type="submit" name="sqr3" class="tttbutton" value="{{session.sqr3|upper}}">
-            <input type="submit" name="sqr4" class="tttbutton" value="{{session.sqr4|upper}}">
-            <input type="submit" name="sqr5" class="tttbutton" value="{{session.sqr5|upper}}">
-            <input type="submit" name="sqr6" class="tttbutton" value="{{session.sqr6|upper}}">
-            <input type="submit" name="sqr7" class="tttbutton" value="{{session.sqr7|upper}}">
-            <input type="submit" name="sqr8" class="tttbutton" value="{{session.sqr8|upper}}">
-            <input type="submit" name="sqr9" class="tttbutton" value="{{session.sqr9|upper}}">
-         </div>
+        <input type="submit" name="sqr1" class="tttbutton" value="{{session.sqr1|upper}}">
+        <input type="submit" name="sqr2" class="tttbutton" value="{{session.sqr2|upper}}">
+        <input type="submit" name="sqr3" class="tttbutton" value="{{session.sqr3|upper}}">
+        <input type="submit" name="sqr4" class="tttbutton" value="{{session.sqr4|upper}}">
+        <input type="submit" name="sqr5" class="tttbutton" value="{{session.sqr5|upper}}">
+        <input type="submit" name="sqr6" class="tttbutton" value="{{session.sqr6|upper}}">
+        <input type="submit" name="sqr7" class="tttbutton" value="{{session.sqr7|upper}}">
+        <input type="submit" name="sqr8" class="tttbutton" value="{{session.sqr8|upper}}">
+        <input type="submit" name="sqr9" class="tttbutton" value="{{session.sqr9|upper}}">
 
       </form>
-      </body>
-
+ 
    {% endif %}
 
    <script type="text/javascript">
@@ -49,6 +48,8 @@
    </script>
    
 {% endif %}
+
+{% endblock %}
 
 
 
