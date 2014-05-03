@@ -2,12 +2,24 @@
 
 {% extends "base.html" %}
 
-{% block header %}    
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    {% if user.is_authenticated %} 
-        Mode: Single Player &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Player: {{player}} &nbsp;&nbsp;&nbsp; <a href = "/accounts/logout"> logout </a>
+{% block header_right %} 
+   
+    {% if user.is_authenticated %}
+
+        <p style="text-align:right;padding-right:1em;">
+            MODE: Single Player; &nbsp;&nbsp; PLAYER: {{player}} <a href = "/accounts/logout"> &nbsp;&nbsp;logout </a>
+        </p>
+
     {% endif %}
     
+{% endblock %}
+
+{% block sidebar %}
+
+    <form action="" method="post"> {% csrf_token %}
+        <input style="border-width:7px;font-size:1.2em; padding-left:2.0em;padding-right:2.0em;border-radius:15px;font-style:italic" type="submit" name="reset" value="Reset">
+    </form>
+
 {% endblock %}
 
 {% block extension %}

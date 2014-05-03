@@ -45,16 +45,22 @@ def invalid(request) :
 
 def auth_view(request) :
 
-    username = request.POST.get('username', '')
-    password = request.POST.get('password', '')
+    if "register" in request.POST :
 
-    user = auth.authenticate(username = username, password = password)
+        return HttpResponseRedirect('/accounts/register/')
 
-    if user is not None :
-        auth.login(request, user)
-        return HttpResponseRedirect('/tictactoe/new_game')
     else :
-        return HttpResponseRedirect('/accounts/invalid')
+
+        username = request.POST.get('username', '')
+        password = request.POST.get('password', '')
+
+        user = auth.authenticate(username = username, password = password)
+
+        if user is not None :
+            auth.login(request, user)
+            return HttpResponseRedirect('/tictactoe/new_game')
+        else :
+            return HttpResponseRedirect('/accounts/invalid')
 
 #################################################################
 #
@@ -117,71 +123,88 @@ def tictactoe(request) :
 
     # Set this to True if the user pressed invalid button
     # and the turn needs to be skipped
-    skip_turn = False
+    return_now = False
 
     if request.method == "POST" :
-        #----------------------------------------------------------
-        # Check for user's response and mark user-specified button 
-        # with "X"
-        #----------------------------------------------------------
-        if "sqr1" in request.POST : 
-            if not request.session.get("sqr1", "") :                           
-                request.session["sqr1"] = "X"
-            else :
-                skip_turn = True
-        if "sqr2" in request.POST :
-            if not request.session.get("sqr2", "") :                
-                request.session["sqr2"] = "X"
-            else :
-                skip_turn = True
-        if "sqr3" in request.POST :
-            if not request.session.get("sqr3", "") :               
-                request.session["sqr3"] = "X"
-            else :
-                skip_turn = True
-        if "sqr4" in request.POST :
-            if not request.session.get("sqr4", "") :
-                request.session["sqr4"] = "X"
-            else :
-                skip_turn = True
-        if "sqr5" in request.POST :
-            if not request.session.get("sqr5", "") :                
-                request.session["sqr5"] = "X"
-            else :
-                skip_turn = True
-        if "sqr6" in request.POST :            
-            if not request.session.get("sqr6", "") :               
-                request.session["sqr6"] = "X"
-            else :
-                skip_turn = True
-        if "sqr7" in request.POST :           
-            if not request.session.get("sqr7", "") :              
-                request.session["sqr7"] = "X"
-            else :
-                skip_turn = True
-        if "sqr8" in request.POST :            
-            if not request.session.get("sqr8", "") :               
-                request.session["sqr8"] = "X"
-            else :
-                skip_turn = True
-        if "sqr9" in request.POST :           
-            if not request.session.get("sqr9", "") :               
-                request.session["sqr9"] = "X"
-            else :
-                skip_turn = True
 
-        if not skip_turn :
+        if "reset" in request.POST :
+            #---------------------------------------------------------
+            # Reset buttons for a new game
+            #---------------------------------------------------------
+            request.session["sqr1"] = ""
+            request.session["sqr2"] = ""
+            request.session["sqr3"] = ""
+            request.session["sqr4"] = ""
+            request.session["sqr5"] = ""
+            request.session["sqr6"] = ""
+            request.session["sqr7"] = ""
+            request.session["sqr8"] = ""
+            request.session["sqr9"] = ""
+            return_now = True          
+
+        if not return_now :
+            #----------------------------------------------------------
+            # Check for user's response and mark user-specified button 
+            # with "X"
+            #----------------------------------------------------------
+            if "sqr1" in request.POST : 
+                if not request.session.get("sqr1", "") :                           
+                    request.session["sqr1"] = "X"
+                else :
+                    return_now = True
+            if "sqr2" in request.POST :
+                if not request.session.get("sqr2", "") :                
+                    request.session["sqr2"] = "X"
+                else :
+                    return_now = True
+            if "sqr3" in request.POST :
+                if not request.session.get("sqr3", "") :               
+                    request.session["sqr3"] = "X"
+                else :
+                    return_now = True
+            if "sqr4" in request.POST :
+                if not request.session.get("sqr4", "") :
+                    request.session["sqr4"] = "X"
+                else :
+                    return_now = True
+            if "sqr5" in request.POST :
+                if not request.session.get("sqr5", "") :                
+                    request.session["sqr5"] = "X"
+                else :
+                    return_now = True
+            if "sqr6" in request.POST :            
+                if not request.session.get("sqr6", "") :               
+                    request.session["sqr6"] = "X"
+                else :
+                    return_now = True
+            if "sqr7" in request.POST :           
+                if not request.session.get("sqr7", "") :              
+                    request.session["sqr7"] = "X"
+                else :
+                    return_now = True
+            if "sqr8" in request.POST :            
+                if not request.session.get("sqr8", "") :               
+                    request.session["sqr8"] = "X"
+                else :
+                    return_now = True
+            if "sqr9" in request.POST :           
+                if not request.session.get("sqr9", "") :               
+                    request.session["sqr9"] = "X"
+                else :
+                    return_now = True
+         
+        if not return_now :
         
             if check_user_won(request.session) == True :          
-                #---------------------------------------------------
+                #-----------------------------------------------------
                 # The user won
-                #---------------------------------------------------
+                #-----------------------------------------------------
                 request.session["status"] = "USERWON"
  
             else :
-                #---------------------------------------------------
+                #-----------------------------------------------------
                 # Keep playing - Make a turn
-                #---------------------------------------------------
+                #-----------------------------------------------------
 
                 # Check to see if it is a good time to attack
                 # and win in this turn. If it is, play attack
@@ -220,20 +243,6 @@ def tictactoe(request) :
             #----------------------------------------------------------
             if check_draw(request.session) :            
                 request.session["status"] = "DRAW"
-
-            #----------------------------------------------------------
-            # Check to see if we need to clear buttons for a new game
-            #----------------------------------------------------------
-            if request.session["status"] != "CONTINUE" :
-                request.session["sqr1"] = ""
-                request.session["sqr2"] = ""
-                request.session["sqr3"] = ""
-                request.session["sqr4"] = ""
-                request.session["sqr5"] = ""
-                request.session["sqr6"] = ""
-                request.session["sqr7"] = ""
-                request.session["sqr8"] = ""
-                request.session["sqr9"] = ""
     
     #------------------------------------------------------------------
     # Feed the HTML page to the browser

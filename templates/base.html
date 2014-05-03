@@ -5,39 +5,69 @@
 <head>
 <style type = "text/css">
 
+    html, body {
+        margin: 0;
+	padding: 0;
+    }
+
     #container {
         width:100%;
         height:100%;
-        background:white;
+        background:#EEEEEE;
     }
 
     #header {
-        background-color:#666666;
-        text-align:left;
-        text-indent:2em;
+        display:table;
+        width:98%;        
+        background:#666666;
+        margin-left:0.3em;
+        margin-right:0.3em;
+        border-radius:15px;
+        overflow:hidden;
+        border-style:solid;
+        border-width:7px;
+        border-color:#444444;    
+    }
+
+    #header_left {
+        display:table-cell;
+        table-layout:fixed;
+        width:60%;
+        background:#666666;
+    }
+
+    #header_right {
+        display:table-cell;  
+        table-layout:fixed;      
+        width:40%;        
+        background:#666666;
     }
 
     #sidebar {
         float:left;              
-        width:25%;
-        height:35em;
+        width:20%;
+        height:30em;
         background:#999999;
         text-align:center;
+        margin-top:0.3em;
+        margin-bottom:0.3em;
+        margin-left:0.3em;        
+        border-radius:15px;
     }
 
     #content {
         float:right;
         width:75%;
-        height:35em;
-        background:#EEEEEE;
-        text-indent:2em;
+        height:30em;
+        background:#EEEEEE;        
+        padding-left:2em;        
     }
 
     #footer {
         background:#666666;
         clear:both;
         text-align:center;
-        text-align:center"
+        border-radius:15px;"
     }
     
 </style>
@@ -47,17 +77,26 @@
 <body>
 
 <div id ="container">  
+
     <div id="header">
-    <h2 style= "margin-bottom:0;padding-top:0.5em;padding-bottom:0.5em;">
-        Tic-Tac-Toe
-        {% block header %}
-        {% endblock %}
-    </h2>
+       <div id="header_left">
+           <h1 style= "padding-left:1em;margin-bottom:0;font-style:italic;">
+               Tic-Tac-Toe
+            </h1>
+        </div>
+        <div id="header_right">
+           <h4 style= "text-align:right;padding-right:1em;font-style:italic;">
+               {% block header_right %}
+               {% endblock %}
+           </h4>
+        </div>         
     </div> 
 
     <div id="content">
-        {% block content %}
-        {% endblock %}
+        <p style = "margin-top:0;">
+            {% block content %}
+            {% endblock %}
+        </p>
     </div> 
 
     <div id="sidebar">
