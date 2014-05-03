@@ -7,7 +7,7 @@
     {% if user.is_authenticated %}
 
         <p style="text-align:right;padding-right:1em;">
-            MODE: Single Player; &nbsp;&nbsp; PLAYER: {{player}} <a href = "/accounts/logout"> logout </a>
+            MODE: Single Player; &nbsp;&nbsp; PLAYER: {{player}} <a href = "/accounts/logout"> &nbsp;&nbsp;logout </a>
         </p>
 
     {% endif %}
