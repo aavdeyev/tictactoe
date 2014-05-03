@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+
+{% extends 'base.html' %}
+
+{% block content %}
+
 <p> User Added Successfully </p>
 <body>        
     <form action="add_user" method="get">
@@ -9,3 +14,5 @@
     </form>    
 </body>
 </html>
+
+{% endblock %}

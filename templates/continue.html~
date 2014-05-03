@@ -1,7 +1,12 @@
 <!DOCTYPE html>
+
+{% extends 'base.html' %}
+
+{% block content %}
+
 <p> User Added Successfully </p>
 <body>        
-    <form action="add_user" method="post">
+    <form action="add_user" method="get">
          
         <p style="line-height: 2em; margin: 2em; margin-left: 4em; text-align: left">
             <input type="submit" value="OK">
@@ -9,3 +14,5 @@
     </form>    
 </body>
 </html>
+
+{% endblock %}

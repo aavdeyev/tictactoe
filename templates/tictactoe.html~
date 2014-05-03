@@ -2,11 +2,15 @@
 
 {% extends "base.html" %}
 
-{% block sidebar %}
-    <a href = "/accounts/logout"> logout </a>
+{% block header %}    
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    {% if user.is_authenticated %} 
+    Mode: Single Player &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Player: {{player}} &nbsp;&nbsp;&nbsp; <a href = "/accounts/logout"> logout </a>
+    {% endif %}
+    
 {% endblock %}
 
-{% block button_area %}
+{% block extension %}
 
 {% if user.is_authenticated %}
 
@@ -17,23 +21,39 @@
 
    {% else %} 
      
-      <style "media=screen" type="text/css"> 
-          .tttbutton {width:5em; height:5em; text-align:center; vertical-align:center; display:inline-block;} 
+      <style type="text/css"> 
+          .ttt_button {
+              width:2.3em;
+              height:2.3em;
+              text-align:center; 
+              vertical-align:center; 
+              display:inline-block; 
+              font-size:2em;                                     
+          } 
+
+          #button_area {
+              position:absolute; 
+              left:30%;
+              top:8em; 
+              width:15em; 
+              height:15em; 
+              background:#EEEEEE;
+          }
       </style>
     
-      <form action="" method="post"> {% csrf_token %}
-
-        <input type="submit" name="sqr1" class="tttbutton" value="{{session.sqr1|upper}}">
-        <input type="submit" name="sqr2" class="tttbutton" value="{{session.sqr2|upper}}">
-        <input type="submit" name="sqr3" class="tttbutton" value="{{session.sqr3|upper}}">
-        <input type="submit" name="sqr4" class="tttbutton" value="{{session.sqr4|upper}}">
-        <input type="submit" name="sqr5" class="tttbutton" value="{{session.sqr5|upper}}">
-        <input type="submit" name="sqr6" class="tttbutton" value="{{session.sqr6|upper}}">
-        <input type="submit" name="sqr7" class="tttbutton" value="{{session.sqr7|upper}}">
-        <input type="submit" name="sqr8" class="tttbutton" value="{{session.sqr8|upper}}">
-        <input type="submit" name="sqr9" class="tttbutton" value="{{session.sqr9|upper}}">
-
-      </form>
+      <div id = "button_area">
+          <form action="" method="post"> {% csrf_token %}
+            <input type="submit" name="sqr1" class="ttt_button" value="{{session.sqr1|upper}}">
+            <input type="submit" name="sqr2" class="ttt_button" value="{{session.sqr2|upper}}">
+            <input type="submit" name="sqr3" class="ttt_button" value="{{session.sqr3|upper}}">
+            <input type="submit" name="sqr4" class="ttt_button" value="{{session.sqr4|upper}}">
+            <input type="submit" name="sqr5" class="ttt_button" value="{{session.sqr5|upper}}">
+            <input type="submit" name="sqr6" class="ttt_button" value="{{session.sqr6|upper}}">
+            <input type="submit" name="sqr7" class="ttt_button" value="{{session.sqr7|upper}}">
+            <input type="submit" name="sqr8" class="ttt_button" value="{{session.sqr8|upper}}">
+            <input type="submit" name="sqr9" class="ttt_button" value="{{session.sqr9|upper}}">
+          </form>
+       </div>
  
    {% endif %}
 

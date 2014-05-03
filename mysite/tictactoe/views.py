@@ -28,6 +28,17 @@ def login(request) :
 
 ################################################################
 #
+# Function to display invalid user error
+#
+################################################################
+
+def invalid(request) :
+
+   return render_to_response('invalid.html',
+           context_instance=RequestContext(request))
+
+################################################################
+#
 # Function to authenticate a user
 #
 ################################################################
@@ -44,17 +55,6 @@ def auth_view(request) :
         return HttpResponseRedirect('/tictactoe/new_game')
     else :
         return HttpResponseRedirect('/accounts/invalid')
-
-################################################################
-#
-# Function to display logged in screen
-#
-################################################################
-
-def loggedin(request) :
-
-    return render_to_response('loggedin.html',
-            {'full_name': request.user.username})
 
 #################################################################
 #
@@ -239,8 +239,9 @@ def tictactoe(request) :
     # Feed the HTML page to the browser
     #------------------------------------------------------------------
     return render_to_response('tictactoe.html',\
-            {'session' : request.session, 'status'\
-                : request.session["status"]},\
+            {'session' : request.session,\
+                'status' : request.session["status"],\
+                'player' : request.user.username},\
             context_instance=RequestContext(request))
         
 
