@@ -15,6 +15,8 @@ from django.contrib.auth.models import User
 
 from tictactoelib import *
 
+import json
+
 ################################################################
 #
 # Function to Log user in
@@ -26,7 +28,7 @@ def login(request) :
     return render_to_response('login.html',
             context_instance=RequestContext(request))
 
-################################################################
+#############################################import simplejson as json###################
 #
 # Function to display invalid user error
 #
@@ -103,6 +105,33 @@ def register_user(request) :
 def register_success(request) :
 
     return render_to_response('register_success.html')
+
+def start_new_game(request) :
+
+    if not request.user.is_authenticated() :
+
+        # Unathenticated user, redirect the user to the login page
+        return render_to_response('login.html',
+                context_instance=RequestContext(request))
+
+    request.session["sqr1"] = ""
+    request.session["sqr2"] = ""
+    request.session["sqr3"] = ""
+    request.session["sqr4"] = ""
+    request.session["sqr5"] = ""
+    request.session["sqr6"] = ""
+    request.session["sqr7"] = ""
+    request.session["sqr8"] = ""
+    request.session["sqr9"] = ""
+
+    request.session['status'] = "CONTINUE"
+    
+    # Render the clean HTML page to the browser    
+    return render_to_response('tictactoe.html',\
+            {'session' : request.session,\
+                'status' : request.session['status'],\
+                'player' : request.user.username},\
+            context_instance=RequestContext(request))        
             
 ###################################################################
 #
@@ -110,7 +139,10 @@ def register_success(request) :
 #
 ###################################################################
 
-def tictactoe(request) :
+def play_next_turn(request) :
+
+    next_step = ''
+    status = 'CONTINUE'
  
     if not request.user.is_authenticated() :
 
@@ -118,139 +150,52 @@ def tictactoe(request) :
         return render_to_response('login.html',
                 context_instance=RequestContext(request))
 
-    # Always continue by default
-    request.session["status"] = "CONTINUE"
+    if request.method == 'GET' :
 
-    # Set this to True if the user pressed invalid button
-    # and the turn needs to be skipped
-    return_now = False
-
-    if request.method == "POST" :
-
-        if "reset" in request.POST :
-            #---------------------------------------------------------
-            # Reset buttons for a new game
-            #---------------------------------------------------------
-            request.session["sqr1"] = ""
-            request.session["sqr2"] = ""
-            request.session["sqr3"] = ""
-            request.session["sqr4"] = ""
-            request.session["sqr5"] = ""
-            request.session["sqr6"] = ""
-            request.session["sqr7"] = ""
-            request.session["sqr8"] = ""
-            request.session["sqr9"] = ""
-            return_now = True          
-
-        if not return_now :
-            #----------------------------------------------------------
-            # Check for user's response and mark user-specified button 
-            # with "X"
-            #----------------------------------------------------------
-            if "sqr1" in request.POST : 
-                if not request.session.get("sqr1", "") :                           
-                    request.session["sqr1"] = "X"
-                else :
-                    return_now = True
-            if "sqr2" in request.POST :
-                if not request.session.get("sqr2", "") :                
-                    request.session["sqr2"] = "X"
-                else :
-                    return_now = True
-            if "sqr3" in request.POST :
-                if not request.session.get("sqr3", "") :               
-                    request.session["sqr3"] = "X"
-                else :
-                    return_now = True
-            if "sqr4" in request.POST :
-                if not request.session.get("sqr4", "") :
-                    request.session["sqr4"] = "X"
-                else :
-                    return_now = True
-            if "sqr5" in request.POST :
-                if not request.session.get("sqr5", "") :                
-                    request.session["sqr5"] = "X"
-                else :
-                    return_now = True
-            if "sqr6" in request.POST :            
-                if not request.session.get("sqr6", "") :               
-                    request.session["sqr6"] = "X"
-                else :
-                    return_now = True
-            if "sqr7" in request.POST :           
-                if not request.session.get("sqr7", "") :              
-                    request.session["sqr7"] = "X"
-                else :
-                    return_now = True
-            if "sqr8" in request.POST :            
-                if not request.session.get("sqr8", "") :               
-                    request.session["sqr8"] = "X"
-                else :
-                    return_now = True
-            if "sqr9" in request.POST :           
-                if not request.session.get("sqr9", "") :               
-                    request.session["sqr9"] = "X"
-                else :
-                    return_now = True
-         
-        if not return_now :
+        if request.GET.has_key('key_pressed') :
+            key_pressed = request.GET['key_pressed']
+            request.session[key_pressed] = 'X' 
         
-            if check_user_won(request.session) == True :          
-                #-----------------------------------------------------
+            if check_user_won(request.session) : 
+                #-----------------------------------------------------        
                 # The user won
                 #-----------------------------------------------------
-                request.session["status"] = "USERWON"
+                status = 'USERWON'
  
             else :
                 #-----------------------------------------------------
-                # Keep playing - Make a turn
+                # Keep playing - take a turn
                 #-----------------------------------------------------
 
-                # Check to see if it is a good time to attack
-                # and win in this turn. If it is, play attack
-                result = try_attack(request.session)         
-                if result["success"] == False :
+                # Check to see if we can win in this turn
+                next_step = try_attack(request.session) 
+       
+                if not next_step :
+                    # If we can't win now, check to see if we need to 
+                    # block the user from winning in this turn                    
+                    next_step = try_defense(request.session)
 
-                    # If attack didn't work out, check to see if we
-                    # need to prevent user from winning in this turn. 
-                    # If we need, play defense
-                    result = try_defense(request.session)
-                    if result["success"] == False :
-
-                        # Didn't find any opportunity for attack or
-                        # defense, just play pseudo-randomly
-                        result = try_random(request.session)
-            
-                #------------------------------------------------------
-                # Update button info with the new computer-generated "O"
-                #------------------------------------------------------
-                request.session = result["session"]  
-
-                #------------------------------------------------------
-                # Check if user lost now
-                #------------------------------------------------------
-                if check_user_lost(request.session) :                
-                    request.session["status"] = "USERLOST"
-            
-                #------------------------------------------------------
-                # Check after computer's turn if there is a draw
-                #------------------------------------------------------
-                if check_draw(request.session) :            
-                    request.session["status"] = "DRAW"
-        
-            #----------------------------------------------------------
-            # Check after user's turn if there is a draw
-            #----------------------------------------------------------
-            if check_draw(request.session) :            
-                request.session["status"] = "DRAW"
+                    if not next_step :
+                        # If both procs above fail, just play randomly
+                        next_step = try_random(request.session)
+                                            
+                # Update button info with the new computer-generated "O"                
+                request.session[next_step] = 'O'  
+ 
+                if check_user_lost(request.session) :                    
+                    # The user lost                    
+                    status = 'USERLOST'
+                                        
+        # Check if there is a draw        
+        if check_draw(request.session) :            
+            status = 'DRAW'
     
-    #------------------------------------------------------------------
-    # Feed the HTML page to the browser
-    #------------------------------------------------------------------
-    return render_to_response('tictactoe.html',\
-            {'session' : request.session,\
-                'status' : request.session["status"],\
-                'player' : request.user.username},\
-            context_instance=RequestContext(request))
-        
+        # Build JSON to send back to the client
+        json_reply = json.dumps({'next_step' : next_step,\
+                'status' : status})
 
+        print("JSON:" + json_reply)
+        
+        return HttpResponse(json_reply, content_type='application/json')
+
+        

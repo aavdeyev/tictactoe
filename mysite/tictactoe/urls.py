@@ -6,5 +6,6 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
 
-    url(r'^new_game/$', 'tictactoe.views.tictactoe'),    
+    url(r'^next_turn/$', 'tictactoe.views.play_next_turn'),
+    url(r'^new_game/$', 'tictactoe.views.start_new_game'),
 )

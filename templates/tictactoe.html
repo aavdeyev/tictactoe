@@ -16,8 +16,8 @@
 
 {% block sidebar %}
 
-    <form action="" method="post"> {% csrf_token %}
-        <input style="border-width:7px;font-size:1.2em; padding-left:2.0em;padding-right:2.0em;border-radius:15px;font-style:italic" type="submit" name="reset" value="Reset">
+    <form action="/tictactoe/new_game/" method="post"> {% csrf_token %}
+        <input style="border-width:7px;font-size:1.2em; padding-left:1.5em;padding-right:1.5em;border-radius:15px;font-style:italic" type="submit" name="reset" value="New Game">
     </form>
 
 {% endblock %}
@@ -52,18 +52,54 @@
               background:#EEEEEE;
           }
       </style>
-    
+   
       <div id = "button_area">
-          <form action="" method="post"> {% csrf_token %}
-            <input type="submit" name="sqr1" class="ttt_button" value="{{session.sqr1|upper}}">
-            <input type="submit" name="sqr2" class="ttt_button" value="{{session.sqr2|upper}}">
-            <input type="submit" name="sqr3" class="ttt_button" value="{{session.sqr3|upper}}">
-            <input type="submit" name="sqr4" class="ttt_button" value="{{session.sqr4|upper}}">
-            <input type="submit" name="sqr5" class="ttt_button" value="{{session.sqr5|upper}}">
-            <input type="submit" name="sqr6" class="ttt_button" value="{{session.sqr6|upper}}">
-            <input type="submit" name="sqr7" class="ttt_button" value="{{session.sqr7|upper}}">
-            <input type="submit" name="sqr8" class="ttt_button" value="{{session.sqr8|upper}}">
-            <input type="submit" name="sqr9" class="ttt_button" value="{{session.sqr9|upper}}">
+           <form action="" method="get"> {% csrf_token %}
+
+           <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+
+           <script type="text/javascript"> 
+
+               // Check to see if JQuery loaded successfully
+               if (!window.jQuery) {    
+                   alert("JQuery not loaded");
+               }
+
+               //
+               // The function to update buttons asynchronously
+               //
+               function send_to_server(key) {
+                   // Send key pressed to the server
+                   $.getJSON("/tictactoe/next_turn/", {key_pressed : key}, function(json) {
+                       next_step = json['next_step'];
+                       status = json['status'];
+
+                       // Check to see if there is a next step. If there is, mark
+                       // proper button with 'O'
+                       if (next_step.length != 0) {
+                           document.getElementsByName(next_step)[0].value="O"
+                       }
+
+                       if (status.toUpperCase() == "USERWON") {
+                           alert("YOU WIN!");
+                       } else if (status.toUpperCase() == "USERLOST") {
+                           alert("YOU LOST!");
+                       } else if (status.toUpperCase() == "DRAW") {
+                           alert("DRAW");
+                       }                       
+                   });                 
+                }
+            </script>
+
+            <input type="button" name="sqr1" class="ttt_button" value="" onClick="if (value.length == 0) {value='X'; send_to_server('sqr1');}">
+            <input type="button" name="sqr2" class="ttt_button" value="" onClick="if (value.length == 0) {value='X'; send_to_server('sqr2');}">
+            <input type="button" name="sqr3" class="ttt_button" value="" onClick="if (value.length == 0) {value='X'; send_to_server('sqr3');}">
+            <input type="button" name="sqr4" class="ttt_button" value="" onClick="if (value.length == 0) {value='X'; send_to_server('sqr4');}">
+            <input type="button" name="sqr5" class="ttt_button" value="" onClick="if (value.length == 0) {value='X'; send_to_server('sqr5');}">
+            <input type="button" name="sqr6" class="ttt_button" value="" onClick="if (value.length == 0) {value='X'; send_to_server('sqr6');}">
+            <input type="button" name="sqr7" class="ttt_button" value="" onClick="if (value.length == 0) {value='X'; send_to_server('sqr7');}">
+            <input type="button" name="sqr8" class="ttt_button" value="" onClick="if (value.length == 0) {value='X'; send_to_server('sqr8');}">
+            <input type="button" name="sqr9" class="ttt_button" value="" onClick="if (value.length == 0) {value='X'; send_to_server('sqr9');}">
           </form>
        </div>
  
