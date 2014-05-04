@@ -1,3 +1,13 @@
+####################################################################
+#
+# The proc to check if the user has won
+#
+# Input - Django session
+# Returns - True or False
+#
+####################################################################
+
+
 def check_user_won(session) :
 
     sqr1 = session.get('sqr1','').upper()
@@ -20,6 +30,14 @@ def check_user_won(session) :
     else :              
         return False
 
+#####################################################################
+#
+# The proc to check if the user has lost
+#
+#  Input - Django session
+#  Returns - True or False
+#
+#####################################################################
 
 def check_user_lost(session) :
 
@@ -43,6 +61,15 @@ def check_user_lost(session) :
     else :              
         return False
 
+#################################################################
+#
+# The proc to check if there is a draw
+#
+#  Input - Django session
+#  Returns - True or False
+#
+#################################################################
+
 def check_draw(session) :
 
     sqr1 = session.get('sqr1','').upper()
@@ -59,6 +86,16 @@ def check_draw(session) :
         return True
     else :
         return False
+
+##################################################################
+#
+# The proc to check if we can win in this turn 
+#
+#  Input - Django session
+#  Returns - Next step (sqrX) if we can win in this step or '' 
+#      if we can't win in this step
+#
+##################################################################
 
 def try_attack(session) :
 
@@ -150,6 +187,16 @@ def try_attack(session) :
     else :
         return ''
 
+##################################################################
+#
+# The proc to check if there is a risk of the user winning 
+#
+#  Input - Django session
+#  Returns - Next step (sqrX) if there is a risk or '' 
+#      if there is no risk yet
+#
+##################################################################
+
 def try_defense(session) :
 
     sqr1 = session.get('sqr1','').upper()
@@ -239,6 +286,15 @@ def try_defense(session) :
 
     else :
         return ''
+
+#################################################################
+#
+# The proc to make a random turn 
+#
+#  Input - Django session
+#  Returns - Next step (sqrX)
+#
+##################################################################
 
 def try_random(session) :
     
