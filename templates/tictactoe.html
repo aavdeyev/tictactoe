@@ -17,7 +17,7 @@
 {% block sidebar %}
 
     <form action="/tictactoe/new_game/" method="post"> {% csrf_token %}
-        <input style="border-width:7px;font-size:1.2em; padding-left:1.5em;padding-right:1.5em;border-radius:15px;font-style:italic" type="submit" name="reset" value="New Game">
+        <input style="border-width:7px;font-size:1.2em; padding-left:1.5em;padding-right:1.5em;border-radius:10px;font-style:italic" type="submit" name="reset" value="New Game">
     </form>
 
 {% endblock %}
@@ -51,6 +51,20 @@
               height:15em; 
               background:#EEEEEE;
           }
+
+          #status_area {
+              position:absolute;
+              left:30%;
+              top:20em;
+              width:15em;
+              height:auto;              
+              background:#EEEEEE;
+              padding-top: 0;
+              font-style:italic;
+              font-size:20px;
+              text-align:left;
+              padding-left:1em;
+          }
       </style>
    
       <div id = "button_area">
@@ -66,54 +80,75 @@
                }
 
                //
+               // Update status panel with current status
+               //
+               function printStatus(status) {
+                                        
+                   document.getElementById("status_text").innerHTML = status;
+               }
+
+               //
                // The function to update buttons asynchronously
                //
-               function send_to_server(key) {
-                   // Send key pressed to the server
-                   $.getJSON("/tictactoe/next_turn/", {key_pressed : key}, function(json) {
-                       next_step = json['next_step'];
-                       status = json['status'];
+               function onTTTButtonClick(button_id) {
 
-                       // Check to see if there is a next step. If there is, mark
-                       // proper button with 'O'
-                       if (next_step.length != 0) {
-                           document.getElementsByName(next_step)[0].value="O"
-                       }
+                   button = document.getElementById(button_id);
 
-                       if (status.toUpperCase() == "USERWON") {
-                           alert("YOU WIN!");
-                       } else if (status.toUpperCase() == "USERLOST") {
-                           alert("YOU LOST!");
-                       } else if (status.toUpperCase() == "DRAW") {
-                           alert("DRAW");
-                       }                       
-                   });                 
+                   if (button.value.length == 0) {
+                       
+                       printStatus('Wait...');
+
+                       // Mark the button clicked by the user with 'X'
+                       button.value = 'X';
+
+                       // Send key pressed to the server
+                       $.getJSON("/tictactoe/next_turn/", {key_pressed : button_id}, function(json) {
+                           status = json['status'];
+                           next_step = json['next_step'];
+
+                           // Check to see if there is a next step. If there is, mark
+                           // proper button with 'O'
+                           if (next_step.length != 0) {
+                               document.getElementById(next_step).value="O";
+                           }
+
+                           // Show a popup when the game is finished
+                           if (status.toUpperCase() == "USERWON") {                               
+                               printStatus('Game Over: You Won');
+                               alert("You Win!");
+                           } else if (status.toUpperCase() == "USERLOST") {
+                               printStatus('Game Over: You lost');
+                               alert("You Lose!");                               
+                           } else if (status.toUpperCase() == "DRAW") {
+                               printStatus('Game Over: Draw');
+                               alert("Draw");                               
+                           } else {
+                               printStatus('Your turn...'); 
+                           }
+                       });
+                   }                                                      
                 }
+
+ 
             </script>
 
-            <input type="button" name="sqr1" class="ttt_button" value="" onClick="if (value.length == 0) {value='X'; send_to_server('sqr1');}">
-            <input type="button" name="sqr2" class="ttt_button" value="" onClick="if (value.length == 0) {value='X'; send_to_server('sqr2');}">
-            <input type="button" name="sqr3" class="ttt_button" value="" onClick="if (value.length == 0) {value='X'; send_to_server('sqr3');}">
-            <input type="button" name="sqr4" class="ttt_button" value="" onClick="if (value.length == 0) {value='X'; send_to_server('sqr4');}">
-            <input type="button" name="sqr5" class="ttt_button" value="" onClick="if (value.length == 0) {value='X'; send_to_server('sqr5');}">
-            <input type="button" name="sqr6" class="ttt_button" value="" onClick="if (value.length == 0) {value='X'; send_to_server('sqr6');}">
-            <input type="button" name="sqr7" class="ttt_button" value="" onClick="if (value.length == 0) {value='X'; send_to_server('sqr7');}">
-            <input type="button" name="sqr8" class="ttt_button" value="" onClick="if (value.length == 0) {value='X'; send_to_server('sqr8');}">
-            <input type="button" name="sqr9" class="ttt_button" value="" onClick="if (value.length == 0) {value='X'; send_to_server('sqr9');}">
+            <input type="button" name="sqr1" id="sqr1" class="ttt_button" value="" onClick="onTTTButtonClick('sqr1')">
+            <input type="button" name="sqr2" id="sqr2" class="ttt_button" value="" onClick="onTTTButtonClick('sqr2')">
+            <input type="button" name="sqr3" id="sqr3" class="ttt_button" value="" onClick="onTTTButtonClick('sqr3')">
+            <input type="button" name="sqr4" id="sqr4" class="ttt_button" value="" onClick="onTTTButtonClick('sqr4')">
+            <input type="button" name="sqr5" id="sqr5" class="ttt_button" value="" onClick="onTTTButtonClick('sqr5')">
+            <input type="button" name="sqr6" id="sqr6" class="ttt_button" value="" onClick="onTTTButtonClick('sqr6')">
+            <input type="button" name="sqr7" id="sqr7" class="ttt_button" value="" onClick="onTTTButtonClick('sqr7')">
+            <input type="button" name="sqr8" id="sqr8" class="ttt_button" value="" onClick="onTTTButtonClick('sqr8')">
+            <input type="button" name="sqr9" id="sqr9" class="ttt_button" value="" onClick="onTTTButtonClick('sqr9')">
           </form>
+       </div>
+
+       <div id = "status_area">
+               <span id = "status_text"> Your turn... </span>           
        </div>
  
    {% endif %}
-
-   <script type="text/javascript">
-      {% if status|upper == 'USERWON' %}
-         alert ("You win!")                       
-      {% elif status|upper == 'USERLOST' %}
-         alert ("You lose!")
-      {% elif status|upper == 'DRAW' %}
-         alert ("Draw!")
-      {% endif %}
-   </script>
    
 {% endif %}
 
