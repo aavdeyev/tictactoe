@@ -133,15 +133,37 @@ def start_new_game(request) :
         request.session[key] = ''
 
     request.session['status'] = 'CONTINUE'
-    
+
+    #---------------------------------------------------------------
+    # Display the number of user's and computer's wins
+    #---------------------------------------------------------------
+
+    user_id = User.objects.get(username=request.user.username).id
+    user_wins = History.objects.filter(owner=user_id,\
+            result='USERWON').count()
+    computer_wins = History.objects.filter(owner=user_id,\
+            result='USERLOST').count()
+
+    #---------------------------------------------------------------
+    # Update the number of user's and computer's wins
+    #---------------------------------------------------------------
+
+    user_id = User.objects.get(username=request.user.username).id
+    user_wins = History.objects.filter(owner=user_id,\
+            result='USERWON').count()
+    computer_wins = History.objects.filter(owner=user_id,\
+            result='USERLOST').count()
+        
     #---------------------------------------------------------------
     # Render the clean HTML page to the browser
     #---------------------------------------------------------------
 
     return render_to_response('tictactoe.html',\
             {'session' : request.session,\
-                'status' : request.session['status'],\
-                'player' : request.user.username},\
+            'status' : request.session['status'],\
+            'player' : request.user.username,\
+            'you_win' : user_wins,\
+            'computer_wins' : computer_wins},\
             context_instance=RequestContext(request))        
             
 ###################################################################

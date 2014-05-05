@@ -31,8 +31,8 @@
                   height:2.3em;
                   text-align:center; 
                   vertical-align:center; 
-                  display:inline-block; 
-                  font-size:2em;                                     
+                  display:inline-block;
+                  font-size:2em;                                                      
               } 
 
               #ttt_button_area {
@@ -40,7 +40,7 @@
                   left:31%;
                   top:9em; 
                   width:15em; 
-                  height:15em; 
+                  height:15em;
                   background:#EEEEEE;
               }
 
@@ -56,6 +56,33 @@
                   font-size:20px;
                   text-align:left;
                   padding-left:1em;
+              }
+
+              #ttt_score_area {
+                  display:table;
+                  float:right;
+                  margin-top:3.5em;
+                  margin-right:8em;               
+                  width:15em;
+                  height:10em;
+                  text-align:center;
+                  vertical-align:middle;
+                  background:#EEEEEE;
+                  border-radius:20px;
+                  border-style:solid;
+                  border-width:4px;
+                  border-color:#888888;
+                  box-shadow:
+                    inset 0 0 0 4px #999,
+                    inset 0 0 0 8px #aaa,                    
+                    inset 0 0 0 16px #bbb,
+                    inset 0 0 0 20px #ccc,
+                    inset 0 0 0 20px #ddd;                                    
+              }
+
+              #ttt_inner_score_area {
+                  display:table-cell;
+                  vertical-align:middle;
               }
   
           </style>
@@ -140,8 +167,15 @@
            <div id = "ttt_status_area">
                    <span id = "status_text"> Your turn... </span>           
            </div>
- 
-       { % endif %}
+
+           <div id = "ttt_score_area">
+               <div id = "ttt_inner_score_area">
+                   <p> You Win: {{you_win}} </p>
+                   <p> Computer Wins: {{computer_wins}} </p>
+               </div>
+           </div>
+
+       {% endif %}
 
     {% endif %}
    
