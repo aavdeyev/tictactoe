@@ -202,7 +202,7 @@ def play_next_turn(request) :
                 #-----------------------------------------------------
 
                 # Check to see if we can win in this turn
-                next_step = try_attack(request.session) 
+                next_step = try_win(request.session) 
        
                 if not next_step :
                     # If we can't win now, check to see if we need to 
@@ -210,8 +210,12 @@ def play_next_turn(request) :
                     next_step = try_defense(request.session)
 
                     if not next_step :
-                        # If both procs above fail, just play randomly
-                        next_step = try_random(request.session)
+                        # Check to see if we can attack
+                        next_step = try_attack(request.session)
+                        
+                        if not next_step :
+                            # If tries above fail, just play random
+                            next_step = try_random(request.session)
                                             
                 # Update button info with the new computer-generated "O"                
                 request.session[next_step] = 'O'  

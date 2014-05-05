@@ -89,15 +89,15 @@ def check_draw(session) :
 
 ##################################################################
 #
-# The proc to check if we can win in this turn 
+#  Check if we can win in this turn 
 #
 #  Input - Django session
-#  Returns - Next step (sqrX) if we can win in this step or '' 
+#  Returns - Suggested next step (sqrX) to win in this step or '' 
 #      if we can't win in this step
 #
 ##################################################################
 
-def try_attack(session) :
+def try_win(session) :
 
     sqr1 = session.get('sqr1','').upper()
     sqr2 = session.get('sqr2','').upper()
@@ -187,14 +187,86 @@ def try_attack(session) :
     else :
         return ''
 
-##################################################################
+#####################################################################
 #
-# The proc to check if there is a risk of the user winning in
-# the next turn
+# Try to attack
 #
 #  Input - Django session
-#  Returns - Next step (sqrX) if there is a risk or '' 
-#      if there is no risk yet
+#  Returns - Suggested next step (sqrX) to attack if there is 
+#      an opportunity for an attack or '' if there is not
+#
+#####################################################################
+
+def try_attack(session) :
+
+    sqr1 = session.get('sqr1','').upper()
+    sqr2 = session.get('sqr2','').upper()
+    sqr3 = session.get('sqr3','').upper()
+    sqr4 = session.get('sqr4','').upper()
+    sqr5 = session.get('sqr5','').upper()
+    sqr6 = session.get('sqr6','').upper()
+    sqr7 = session.get('sqr7','').upper()
+    sqr8 = session.get('sqr8','').upper()
+    sqr9 = session.get('sqr9','').upper()
+
+    if sqr1 == 'O' and not sqr2 and not sqr3 :
+        return 'sqr3'
+    elif sqr2 =='O' and not sqr3 and not sqr1 :
+        return 'sqr1'
+    elif sqr3 == 'O' and not sqr2 and not sqr1 :
+        return 'sqr1' 
+    elif sqr1 == 'O' and not sqr4 and not sqr7 :
+        return 'sqr7'
+    elif sqr4 == 'O' and not sqr1 and not sqr7 :
+        return 'sqr7'
+    elif sqr7 == 'O' and not sqr1 and not sqr4 :
+        return 'sqr1'
+    elif sqr3 == 'O' and not sqr6 and not sqr9 :
+        return 'sqr9'
+    elif sqr6 == 'O' and not sqr3 and not sqr9 :
+        return 'sqr9'
+    elif sqr3 == 'O' and not sqr6 and not sqr9 :
+        return 'sqr3'
+    elif sqr7 == 'O' and not sqr8 and not sqr9 :
+        return 'sqr9'
+    elif sqr8 == 'O' and not sqr7 and not sqr9 :
+        return 'sqr9'
+    elif sqr9 == 'O' and not sqr7 and not sqr8 :
+        return 'sqr7'
+    elif sqr1 == 'O' and not sqr5 and not sqr9 :
+        return 'sqr5'
+    elif sqr5 == 'O' and not sqr1 and not sqr9 :
+        return 'sqr1'
+    elif sqr9 == 'O' and not sqr1 and not sqr5 :
+        return 'sqr1'
+    elif sqr3 == 'O' and not sqr5 and not sqr7 :
+        return 'sqr7'
+    elif sqr5 == 'O' and not sqr3 and not sqr7 :
+        return 'sqr7'
+    elif sqr7 == 'O' and not sqr5 and not sqr3 :
+        return 'sqr3'    
+    elif sqr4 == 'O' and not sqr5 and not sqr6 :
+        return 'sqr5'
+    elif sqr5 == 'O' and not sqr4 and not sqr6 :
+        return 'sqr4'
+    elif sqr6 == 'O' and not sqr4 and not sqr5 :
+        return 'sqr5'
+    elif sqr2 == 'O' and not sqr5 and not sqr8 :
+        return 'sqr5'
+    elif sqr5 == 'O' and not sqr2 and not sqr8 :
+        return 'sqr8'
+    elif sqr8 == 'O' and not sqr2 and not sqr5 :
+        return 'sqr5'
+    else :
+        return ''
+  
+##################################################################
+#
+#  Check defense
+#
+#  Input - Django session
+#  Returns - Suggesed next step (sqrX) to play defense if we 
+#      need to play defense or '' if we don't
 #
 ##################################################################
 
@@ -290,7 +362,7 @@ def try_defense(session) :
 
 #################################################################
 #
-# The proc to take random step 
+#  Just take random step 
 #
 #  Input - Django session
 #  Returns - Next step (sqrX)
