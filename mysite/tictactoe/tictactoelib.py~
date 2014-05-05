@@ -308,9 +308,16 @@ def try_random(session) :
     sqr8 = session.get('sqr8','').upper()
     sqr9 = session.get('sqr9','').upper()  
 
+    #--------------------------------------------------------------
+    # Try center first to see if it already has a key assigned.
+    # If it doesn't have, assign a key to it
+    #--------------------------------------------------------------
     if not sqr5 :
         return 'sqr5'
 
+    #---------------------------------------------------------------
+    # Try corners if center isn't available
+    #---------------------------------------------------------------
     elif not sqr1 :
         return 'sqr1'
   
@@ -322,6 +329,10 @@ def try_random(session) :
 
     elif not sqr7 :
         return 'sqr7'
+
+    #---------------------------------------------------------------
+    # Try sides
+    #---------------------------------------------------------------
 
     elif not sqr6 :        
         return 'sqr6'
@@ -337,3 +348,4 @@ def try_random(session) :
 
     else :
         return ''
+

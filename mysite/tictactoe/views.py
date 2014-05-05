@@ -11,7 +11,11 @@ from django.shortcuts import render_to_response
 from django.contrib import auth
 from django.contrib.auth.forms import UserCreationForm
 
+from django.utils import timezone
+
 from django.contrib.auth.models import User
+
+from tictactoe.models import History
 
 from tictactoelib import *
 
@@ -28,7 +32,7 @@ def login(request) :
     return render_to_response('login.html',
             context_instance=RequestContext(request))
 
-#############################################import simplejson as json###################
+################################################################
 #
 # Function to display invalid user error
 #
@@ -113,20 +117,21 @@ def start_new_game(request) :
         # Unathenticated user, redirect the user to the login page
         return render_to_response('login.html',
                 context_instance=RequestContext(request))
-
-    request.session["sqr1"] = ""
-    request.session["sqr2"] = ""
-    request.session["sqr3"] = ""
-    request.session["sqr4"] = ""
-    request.session["sqr5"] = ""
-    request.session["sqr6"] = ""
-    request.session["sqr7"] = ""
-    request.session["sqr8"] = ""
-    request.session["sqr9"] = ""
-
-    request.session['status'] = "CONTINUE"
     
-    # Render the clean HTML page to the browser    
+    #---------------------------------------------------------------
+    # Clear the key and reset status to 'continue'
+    #---------------------------------------------------------------
+
+    for key in ['sqr1','sqr2','sqr3','sqr4','sqr5','sqr6','sqr7',\
+            'sqr8','sqr9'] :
+        request.session[key] = ''
+
+    request.session['status'] = 'CONTINUE'
+    
+    #---------------------------------------------------------------
+    # Render the clean HTML page to the browser
+    #---------------------------------------------------------------
+
     return render_to_response('tictactoe.html',\
             {'session' : request.session,\
                 'status' : request.session['status'],\
@@ -189,13 +194,25 @@ def play_next_turn(request) :
         # Check if there is a draw        
         if check_draw(request.session) :            
             status = 'DRAW'
+
+        #--------------------------------------------------------------
+        # Save game result if game is complete
+        #--------------------------------------------------------------
+ 
+        if status != 'CONTINUE' :
+            owner = User.objects.get(username=request.user.username).id 
+            created = timezone.now()
+  
+            h = History(owner = owner, created = created, result = status)
+            h.save() 
     
+        #---------------------------------------------------------------
         # Build JSON to send back to the client
+        #---------------------------------------------------------------
+
         json_reply = json.dumps({'next_step' : next_step,\
                 'status' : status})
-
-        print("JSON:" + json_reply)
-        
+         
         return HttpResponse(json_reply, content_type='application/json')
 
         
