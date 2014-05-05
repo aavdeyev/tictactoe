@@ -32,20 +32,20 @@
     #header_left {
         display:table-cell;
         table-layout:fixed;
-        width:55%;
+        width:45%;
         background:#666666;
     }
 
     #header_right {
         display:table-cell;  
         table-layout:fixed;      
-        width:45%;        
+        width:55%;        
         background:#666666;
     }
 
     #sidebar {
         float:left;              
-        width:20%;
+        width:23%;
         height:30em;
         background:#999999;
         text-align:center;
@@ -57,10 +57,11 @@
 
     #content {
         float:right;
-        width:75%;
+        width:72%;
         height:30em;
         background:#EEEEEE;        
-        padding-left:2em;        
+        padding-left:2em;
+        padding-top:1em;        
     }
 
     #footer {
@@ -69,6 +70,16 @@
         text-align:center;
         border-radius:15px;"
     }
+
+    .sidebar_menu_button {
+         display:inline-block;
+         border-width:7px;
+         font-size:1.2em;
+         margin-bottom:1em;
+         width:70%;
+         border-radius:10px;
+         font-style:italic;
+     }
     
 </style>
 
@@ -85,9 +96,16 @@
             </h1>
         </div>
         <div id="header_right">
-           <h3 style= "text-align:right;padding-right:1em;font-style:italic;">
-               {% block header_right %}
-               {% endblock %}
+            <h3 style= "text-align:right;padding-right:1em;font-style:italic;">
+
+            {% if user.is_authenticated %}
+                <p style="text-align:right;padding-right:1em;">
+                    Mode: Single Player; &nbsp;&nbsp; 
+                    Player: {{player}} &nbsp;&nbsp; <a href = "/accounts/logout"> 
+                    logout </a>
+                </p>
+            {% endif %}
+
            </h3>
         </div>         
     </div> 
@@ -95,7 +113,7 @@
     <div id="content">
         <p style = "margin-top:0;">
             {% block content %}
-            {% endblock %}
+            {% endblock %}            
         </p>
     </div> 
 

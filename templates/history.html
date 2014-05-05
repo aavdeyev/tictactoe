@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+{% extends "base.html" %}
+
+{% block sidebar %}
+   
+    <form action="/tictactoe/new_game/" method="get"> {% csrf_token %}
+        <input type="submit" class="sidebar_menu_button" name="back_to_game" value="Back To Game">
+    </form>
+
+{% endblock %}
+
+{% block content %}
+
+    {% if user.is_authenticated %}
+
+        {% if form.errors %}
+
+            <p style="color: red;">Form Error: </p>
+            <p {{form.errors}} </p>
+
+        {% else %}           
+
+            {% for history_line in history_list %}
+                <p style = "font-style:italic;font-size:16px"> 
+                    {% if history_line.result != 'DRAW' %}
+                       {{player}}
+                    {% endif %} 
+
+                    {{history_line}}
+                </p>
+            {% endfor %}
+ 
+        {% endif %}
+   
+    {% endif %}
+
+{% endblock %}
+
+
+
+
+
+
+

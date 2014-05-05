@@ -140,7 +140,8 @@ def start_new_game(request) :
             
 ###################################################################
 #
-# The main function to respond to user's mouse clicks during the game
+# The main view to handle user's mouse clicks during the game
+# The view is using Ajax to update buttons asynchronously
 #
 ###################################################################
 
@@ -215,4 +216,22 @@ def play_next_turn(request) :
          
         return HttpResponse(json_reply, content_type='application/json')
 
-        
+
+def game_history(request) :
+
+    history_html = ""
+ 
+    if not request.user.is_authenticated() :
+
+        # Unathenticated user, redirect the user to the login page
+        return render_to_response('login.html',
+                context_instance=RequestContext(request))
+
+    if request.method == 'GET' :
+        user_id = User.objects.get(username=request.user.username).id
+        history_list = History.objects.filter(owner=user_id)
+
+    return render_to_response('history.html',\
+            {'player' : request.user.username,\
+            'history_list' : history_list},\
+            context_instance=RequestContext(request))
