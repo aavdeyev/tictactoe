@@ -110,6 +110,12 @@ def register_success(request) :
 
     return render_to_response('register_success.html')
 
+##################################################################
+#
+# This will start a new game
+#
+##################################################################
+
 def start_new_game(request) :
 
     if not request.user.is_authenticated() :
@@ -140,8 +146,8 @@ def start_new_game(request) :
             
 ###################################################################
 #
-# The main view to handle user's mouse clicks during the game
-# The view is using Ajax to update buttons asynchronously
+# The main view to handle user's mouse clicks during the game.
+# It is using Ajax to update buttons asynchronously
 #
 ###################################################################
 
@@ -216,6 +222,12 @@ def play_next_turn(request) :
          
         return HttpResponse(json_reply, content_type='application/json')
 
+
+########################################################################
+#
+# The view to display game history
+#
+#########################################################################
 
 def game_history(request) :
 

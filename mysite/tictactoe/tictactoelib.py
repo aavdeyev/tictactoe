@@ -189,7 +189,8 @@ def try_attack(session) :
 
 ##################################################################
 #
-# The proc to check if there is a risk of the user winning 
+# The proc to check if there is a risk of the user winning in
+# the next turn
 #
 #  Input - Django session
 #  Returns - Next step (sqrX) if there is a risk or '' 
@@ -289,7 +290,7 @@ def try_defense(session) :
 
 #################################################################
 #
-# The proc to make a random turn 
+# The proc to take random step 
 #
 #  Input - Django session
 #  Returns - Next step (sqrX)
