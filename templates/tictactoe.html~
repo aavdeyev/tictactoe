@@ -37,17 +37,17 @@
 
               #ttt_button_area {
                   position:absolute; 
-                  left:33vw;
-                  top:15vw; 
-                  width:22vw; 
-                  height:22vw;
+                  left:32vw;
+                  top:16vw; 
+                  width:23vw; 
+                  height:23vw;
                   background:#EEEEEE;
               }
 
              #ttt_status_area {
                   position:absolute;
-                  left:33vw;
-                  top:40vw;
+                  left:32vw;
+                  top:41vw;
                   width:22vw;
                   height:auto;              
                   background:#EEEEEE;
@@ -59,14 +59,13 @@
               }
 
               #ttt_score_area {
-                  display:table;
-                  float:right;
-                  margin-top:5vw;
-                  margin-right:8vw;               
+                  position:absolute;
+                  display:table;                  
+                  top:15vw;
+                  left:65vw;                                 
                   width:22vw;
                   height:18vw;
                   text-align:center;
-                  vertical-align:middle;
                   background:#EEEEEE;
                   border-radius:20px;
                   border-style:solid;
