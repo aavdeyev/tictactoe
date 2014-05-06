@@ -146,7 +146,11 @@
                                        alert("You Lose!");                               
                                    } else if (status.toUpperCase() == "DRAW") {
                                        printStatus('Game Over: Draw');
-                                       alert("Draw");                               
+                                       alert("Draw");
+                                   } else if (status.toUpperCase() == "ERROR")  {
+                                       errMsg = 'Error handling even on the server';
+                                       printStatus(errMsg);
+                                       alert(errMsg);
                                    } else {
                                        printStatus('Your turn...'); 
                                    }

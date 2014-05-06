@@ -135,16 +135,6 @@ def start_new_game(request) :
     request.session['status'] = 'CONTINUE'
 
     #---------------------------------------------------------------
-    # Display the number of user's and computer's wins
-    #---------------------------------------------------------------
-
-    user_id = User.objects.get(username=request.user.username).id
-    user_wins = History.objects.filter(owner=user_id,\
-            result='USER_WON').count()
-    computer_wins = History.objects.filter(owner=user_id,\
-            result='USER_LOST').count()
-
-    #---------------------------------------------------------------
     # Update the number of user's and computer's wins
     #---------------------------------------------------------------
 
@@ -239,8 +229,11 @@ def play_next_turn(request) :
             created = timezone.now()
               
             h = History(owner = owner, created = created, result = status)
-            h.save() 
-            
+            try:
+                h.save() 
+            except Exception as err:           
+                return
+                        
         #---------------------------------------------------------------
         # Build JSON to send back to the client
         #---------------------------------------------------------------
