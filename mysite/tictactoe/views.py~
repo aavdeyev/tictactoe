@@ -140,9 +140,9 @@ def start_new_game(request) :
 
     user_id = User.objects.get(username=request.user.username).id
     user_wins = History.objects.filter(owner=user_id,\
-            result='USERWON').count()
+            result='USER_WON').count()
     computer_wins = History.objects.filter(owner=user_id,\
-            result='USERLOST').count()
+            result='USER_LOST').count()
 
     #---------------------------------------------------------------
     # Update the number of user's and computer's wins
@@ -150,9 +150,9 @@ def start_new_game(request) :
 
     user_id = User.objects.get(username=request.user.username).id
     user_wins = History.objects.filter(owner=user_id,\
-            result='USERWON').count()
+            result='USER_WON').count()
     computer_wins = History.objects.filter(owner=user_id,\
-            result='USERLOST').count()
+            result='USER_LOST').count()
         
     #---------------------------------------------------------------
     # Render the clean HTML page to the browser
@@ -187,6 +187,7 @@ def play_next_turn(request) :
     if request.method == 'GET' :
 
         if request.GET.has_key('key_pressed') :
+
             key_pressed = request.GET['key_pressed']
             request.session[key_pressed] = 'X' 
         
@@ -194,7 +195,7 @@ def play_next_turn(request) :
                 #-----------------------------------------------------        
                 # The user won
                 #-----------------------------------------------------
-                status = 'USERWON'
+                status = 'USER_WON'
  
             else :
                 #-----------------------------------------------------
@@ -202,7 +203,7 @@ def play_next_turn(request) :
                 #-----------------------------------------------------
 
                 # Check to see if we can win in this turn
-                next_step = try_attack(request.session) 
+                next_step = try_win(request.session) 
        
                 if not next_step :
                     # If we can't win now, check to see if we need to 
@@ -216,38 +217,38 @@ def play_next_turn(request) :
                         if not next_step :
                             # If tries above fail, just play random
                             next_step = try_random(request.session)
-                                            
-                # Update button info with the new computer-generated "O"                
+                                                           
+                # Update button info with the new computer-generated "O"                 
                 request.session[next_step] = 'O'  
  
                 if check_user_lost(request.session) :                    
                     # The user lost                    
-                    status = 'USERLOST'
+                    status = 'USER_LOST'
                                         
-        # Check if there is a draw        
-        if check_draw(request.session) :            
-            status = 'DRAW'
+                # Check if there is a draw        
+                if check_draw(request.session) :            
+                    status = 'DRAW'
 
         #--------------------------------------------------------------
         # Save game result if game is complete
         #--------------------------------------------------------------
  
         if status != 'CONTINUE' :
+            
             owner = User.objects.get(username=request.user.username).id 
             created = timezone.now()
-  
+              
             h = History(owner = owner, created = created, result = status)
             h.save() 
-    
+            
         #---------------------------------------------------------------
         # Build JSON to send back to the client
         #---------------------------------------------------------------
 
         json_reply = json.dumps({'next_step' : next_step,\
                 'status' : status})
-         
-        return HttpResponse(json_reply, content_type='application/json')
 
+        return HttpResponse(json_reply, content_type='application/json')
 
 ########################################################################
 #

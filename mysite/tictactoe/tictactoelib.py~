@@ -7,7 +7,6 @@
 #
 ####################################################################
 
-
 def check_user_won(session) :
 
     sqr1 = session.get('sqr1','').upper()
@@ -208,13 +207,13 @@ def try_attack(session) :
     sqr7 = session.get('sqr7','').upper()
     sqr8 = session.get('sqr8','').upper()
     sqr9 = session.get('sqr9','').upper()
-
+    
     if sqr1 == 'O' and not sqr2 and not sqr3 :
         return 'sqr3'
     elif sqr2 =='O' and not sqr3 and not sqr1 :
         return 'sqr1'
     elif sqr3 == 'O' and not sqr2 and not sqr1 :
-        return 'sqr1 
+        return 'sqr1' 
     elif sqr1 == 'O' and not sqr4 and not sqr7 :
         return 'sqr7'
     elif sqr4 == 'O' and not sqr1 and not sqr7 :
@@ -281,6 +280,11 @@ def try_defense(session) :
     sqr7 = session.get('sqr7','').upper()
     sqr8 = session.get('sqr8','').upper()
     sqr9 = session.get('sqr9','').upper()
+
+    #-------------------------------------------------------------
+    # Step1 : check to see if the user can win in the next turn,
+    # and, if he can, block him
+    #-------------------------------------------------------------
 
     if sqr1 == 'X' and sqr2 == 'X' and not sqr3 :
         return 'sqr3'
@@ -357,7 +361,13 @@ def try_defense(session) :
     elif sqr3 == 'X' and sqr7 == 'X' and not sqr5 :
         return 'sqr5'
 
+    #-------------------------------------------------------------
+    # Step2 : Look 2 steps ahead and check to see if the user can 
+    # win after 2 turns. If he can, do not let that happen     
+    #-------------------------------------------------------------
+
     else :
+
         return ''
 
 #################################################################

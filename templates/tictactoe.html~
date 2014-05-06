@@ -61,7 +61,7 @@
               #ttt_score_area {
                   position:absolute;
                   display:table;                  
-                  top:15vw;
+                  top:16vw;
                   left:65vw;                                 
                   width:22vw;
                   height:18vw;
@@ -122,28 +122,38 @@
                            button.value = 'X';
 
                            // Send key pressed to the server
-                           $.getJSON("/tictactoe/next_turn/", {key_pressed : button_id}, function(json) {
-                               status = json['status'];
-                               next_step = json['next_step'];
+                           $.ajax({
+                               url: "/tictactoe/next_turn/",
+                               data: {
+                                   'key_pressed' : button_id
+                               },                                                                              
+                               success: function(data) {
+                                   status = data['status'];
+                                   next_step = data['next_step'];
 
-                               // Check to see if there is a next step. If there is, mark
-                               // proper button with 'O'
-                               if (next_step.length != 0) {
-                                   document.getElementById(next_step).value="O";
-                               }
+                                   // Check to see if the game isn't finished 
+                                   // yet. if it isn't, mark proper button with 'O'
+                                   if (next_step.length != 0) {
+                                       document.getElementById(next_step).value="O";
+                                   }
 
-                               // Show a popup when the game is finished
-                               if (status.toUpperCase() == "USERWON") {                               
-                                   printStatus('Game Over: You Won');
-                                   alert("You Win!");
-                               } else if (status.toUpperCase() == "USERLOST") {
-                                   printStatus('Game Over: You lost');
-                                   alert("You Lose!");                               
-                               } else if (status.toUpperCase() == "DRAW") {
-                                   printStatus('Game Over: Draw');
-                                   alert("Draw");                               
-                               } else {
-                                   printStatus('Your turn...'); 
+                                   // Show a popup when the game is finished
+                                   if (status.toUpperCase() == "USER_WON") {                               
+                                       printStatus('Game Over: You Won');
+                                       alert("You Win!");
+                                   } else if (status.toUpperCase() == "USER_LOST") {
+                                       printStatus('Game Over: You lost');
+                                       alert("You Lose!");                               
+                                   } else if (status.toUpperCase() == "DRAW") {
+                                       printStatus('Game Over: Draw');
+                                       alert("Draw");                               
+                                   } else {
+                                       printStatus('Your turn...'); 
+                                   }
+                               },
+                               error: function(request, status, error){
+                                   alert("Ajax failed on button" + button_id +
+                                       ":" + error);
                                }
                            });
                        }                                                      
