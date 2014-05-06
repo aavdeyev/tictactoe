@@ -27,8 +27,8 @@
             <style type="text/css"> 
        
               .ttt_button {
-                  width:2.3em;
-                  height:2.3em;
+                  width:7vw;
+                  height:7vw;
                   text-align:center; 
                   vertical-align:center; 
                   display:inline-block;
@@ -37,18 +37,18 @@
 
               #ttt_button_area {
                   position:absolute; 
-                  left:31%;
-                  top:9em; 
-                  width:15em; 
-                  height:15em;
+                  left:33vw;
+                  top:15vw; 
+                  width:22vw; 
+                  height:22vw;
                   background:#EEEEEE;
               }
 
              #ttt_status_area {
                   position:absolute;
-                  left:31%;
-                  top:21em;
-                  width:15em;
+                  left:33vw;
+                  top:40vw;
+                  width:22vw;
                   height:auto;              
                   background:#EEEEEE;
                   padding-top: 0;
@@ -61,10 +61,10 @@
               #ttt_score_area {
                   display:table;
                   float:right;
-                  margin-top:3.5em;
-                  margin-right:8em;               
-                  width:15em;
-                  height:10em;
+                  margin-top:5vw;
+                  margin-right:8vw;               
+                  width:22vw;
+                  height:18vw;
                   text-align:center;
                   vertical-align:middle;
                   background:#EEEEEE;
@@ -72,7 +72,12 @@
                   border-style:solid;
                   border-width:4px;
                   border-color:#888888;
-                  box-shadow: 10px 10px 5px red;                                 
+                  box-shadow:
+                    inset 0 0 0 4px #999,
+                    inset 0 0 0 8px #aaa,                    
+                    inset 0 0 0 16px #bbb,
+                    inset 0 0 0 20px #ccc,
+                    inset 0 0 0 20px #ddd;                                  
               }
 
               #ttt_inner_score_area {
