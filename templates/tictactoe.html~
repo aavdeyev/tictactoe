@@ -88,7 +88,7 @@
         
           <div id = "ttt_button_area">
 
-               <form action="" method="get"> {% csrf_token %}
+               <form action="" method="post"> {% csrf_token %}
 
                <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
  
@@ -131,9 +131,11 @@
 
                            // Send key pressed to the server
                            $.ajax({
+                               type: 'POST',
                                url: "/tictactoe/next_turn/",
                                data: {
-                                   'key_pressed' : button_id
+                                   'key_pressed' : button_id,
+                                   'csrfmiddlewaretoken' : '{{ csrf_token }}'
                                },                                                                              
                                success: function(data) {
 
@@ -148,9 +150,7 @@
 
                                    // Update game stats in the stats panel                                   
                                    if (status == "USER_WON" || status == "USER_LOST") {
-                                       games_played = data['games_played'];
-
-                                       alert(games_played);
+                                       games_played = data['games_played'];                                       
                                        you_win = data['user_wins'];
                                        you_lose = data['computer_wins'];                                       
                                        printStats(games_played,you_win,you_lose);

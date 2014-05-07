@@ -88,7 +88,7 @@
         
           <div id = "ttt_button_area">
 
-               <form action="" method="get"> {% csrf_token %}
+               <form action="" method="post"> {% csrf_token %}
 
                <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
  
@@ -131,9 +131,11 @@
 
                            // Send key pressed to the server
                            $.ajax({
+                               type: 'POST',
                                url: "/tictactoe/next_turn/",
                                data: {
-                                   'key_pressed' : button_id
+                                   'key_pressed' : button_id,
+                                   'csrfmiddlewaretoken' : '{{ csrf_token }}'
                                },                                                                              
                                success: function(data) {
 

@@ -174,11 +174,15 @@ def play_next_turn(request) :
         return render_to_response('login.html',
                 context_instance=RequestContext(request))
 
-    if request.method == 'GET' :
+    print("In next_turn proc" + request.method)
 
-        if request.GET.has_key('key_pressed') :
+    if request.method == 'POST' :
 
-            key_pressed = request.GET['key_pressed']
+        print ("In request.method post")
+
+        if request.POST.has_key('key_pressed') :
+
+            key_pressed = request.POST['key_pressed']
             request.session[key_pressed] = 'X' 
         
             if check_user_won(request.session) : 
