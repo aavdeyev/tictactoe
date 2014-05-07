@@ -139,6 +139,7 @@ def start_new_game(request) :
     #---------------------------------------------------------------
 
     game_stats = get_game_history_stats(request)
+    games_played = game_stats['games_played']
     user_wins = game_stats['user_wins']
     computer_wins = game_stats['computer_wins']
         
@@ -150,6 +151,7 @@ def start_new_game(request) :
             {'session' : request.session,\
             'status' : request.session['status'],\
             'player' : request.user.username,\
+            'games_played' : games_played,\
             'you_win' : user_wins,\
             'computer_wins' : computer_wins},\
             context_instance=RequestContext(request))        
@@ -242,11 +244,10 @@ def play_next_turn(request) :
         if status == 'USER_WON' or status == 'USER_LOST' :
             # Add total number of wins/losses to the JSON
             game_stats = get_game_history_stats(request)
+            client_msg['games_played'] = game_stats['games_played']
             client_msg['user_wins'] = game_stats['user_wins']
             client_msg['computer_wins'] = game_stats['computer_wins']
-
-        print(client_msg)
-            
+                           
         json_reply = json.dumps(client_msg)
          
         return HttpResponse(json_reply, content_type='application/json')

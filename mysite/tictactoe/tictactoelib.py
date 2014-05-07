@@ -445,11 +445,12 @@ def try_random(session) :
 def get_game_history_stats(request) :
    
     user_id = User.objects.get(username=request.user.username).id
+    games_played = History.objects.filter(owner=user_id).count()
     user_wins = History.objects.filter(owner=user_id,\
             result='USER_WON').count()
     computer_wins = History.objects.filter(owner=user_id,\
             result='USER_LOST').count()
 
-    return {'user_wins' : user_wins, 'computer_wins' : computer_wins}
+    return {'games_played' : games_played, 'user_wins' : user_wins,\
+            'computer_wins' : computer_wins}
     
-
