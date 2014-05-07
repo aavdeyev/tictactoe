@@ -1,3 +1,7 @@
+from django.contrib.auth.models import User
+
+from tictactoe.models import History
+
 ####################################################################
 #
 # The proc to check if the user has won
@@ -88,7 +92,7 @@ def check_draw(session) :
 
 ##################################################################
 #
-#  Check if we can win in this turn 
+#  Check if we can win in this step 
 #
 #  Input - Django session
 #  Returns - Suggested next step (sqrX) to win in this step or '' 
@@ -431,4 +435,21 @@ def try_random(session) :
 
     else :
         return ''
+
+########################################################################
+#
+# The proc to return game history stats in a dictionary
+#
+########################################################################
+
+def get_game_history_stats(request) :
+   
+    user_id = User.objects.get(username=request.user.username).id
+    user_wins = History.objects.filter(owner=user_id,\
+            result='USER_WON').count()
+    computer_wins = History.objects.filter(owner=user_id,\
+            result='USER_LOST').count()
+
+    return {'user_wins' : user_wins, 'computer_wins' : computer_wins}
+    
 

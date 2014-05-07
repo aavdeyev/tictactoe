@@ -138,11 +138,9 @@ def start_new_game(request) :
     # Update the number of user's and computer's wins
     #---------------------------------------------------------------
 
-    user_id = User.objects.get(username=request.user.username).id
-    user_wins = History.objects.filter(owner=user_id,\
-            result='USER_WON').count()
-    computer_wins = History.objects.filter(owner=user_id,\
-            result='USER_LOST').count()
+    game_stats = get_game_history_stats(request)
+    user_wins = game_stats['user_wins']
+    computer_wins = game_stats['computer_wins']
         
     #---------------------------------------------------------------
     # Render the clean HTML page to the browser
@@ -231,16 +229,24 @@ def play_next_turn(request) :
             h = History(owner = owner, created = created, result = status)
             try:
                 h.save() 
-            except Exception as err:           
-                return
-                        
+            except Exception as err:
+                status = 'ERROR'
+                                 
         #---------------------------------------------------------------
         # Build JSON to send back to the client
         #---------------------------------------------------------------
 
-        json_reply = json.dumps({'next_step' : next_step,\
-                'status' : status})
+        # Values to send to the client
+        client_msg = {'next_step' : next_step, 'status' : status}
 
+        if status == 'USER_WON' or status == 'USER_LOST' :
+            # Add total number of wins/losses to the JSON
+            game_stats = get_game_history_stats(request)
+            client_msg['user_wins'] = game_stats['user_wins']
+            client_msg['computer_wins'] = game_stats['computer_wins']
+            
+        json_reply = json.dumps(client_msg)
+         
         return HttpResponse(json_reply, content_type='application/json')
 
 ########################################################################
