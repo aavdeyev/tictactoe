@@ -149,7 +149,9 @@
                                    }
 
                                    // Update game stats in the stats panel                                   
-                                   if (status == "USER_WON" || status == "USER_LOST") {
+                                   if (status == 'USER_WON' || 
+                                           status == 'USER_LOST' || 
+                                           status == 'DRAW') {
                                        games_played = data['games_played'];                                       
                                        you_win = data['user_wins'];
                                        you_lose = data['computer_wins'];                                       

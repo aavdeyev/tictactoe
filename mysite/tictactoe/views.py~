@@ -117,7 +117,6 @@ def register_success(request) :
 ##################################################################
 
 def start_new_game(request) :
-
     if not request.user.is_authenticated() :
 
         # Unathenticated user, redirect the user to the login page
@@ -169,16 +168,11 @@ def play_next_turn(request) :
     status = 'CONTINUE'
  
     if not request.user.is_authenticated() :
-
         # Unathenticated user, redirect the user to the login page
         return render_to_response('login.html',
                 context_instance=RequestContext(request))
-
-    print("In next_turn proc" + request.method)
-
+ 
     if request.method == 'POST' :
-
-        print ("In request.method post")
 
         if request.POST.has_key('key_pressed') :
 
@@ -227,8 +221,7 @@ def play_next_turn(request) :
         # Save game result if game is complete
         #--------------------------------------------------------------
  
-        if status != 'CONTINUE' :
-            
+        if status != 'CONTINUE' :            
             owner = User.objects.get(username=request.user.username).id 
             created = timezone.now()
               
@@ -245,7 +238,7 @@ def play_next_turn(request) :
         # Values to send to the client
         client_msg = {'next_step' : next_step, 'status' : status}
 
-        if status == 'USER_WON' or status == 'USER_LOST' :
+        if status in ('USER_LOST', 'USER_WON', 'DRAW') :
             # Add total number of wins/losses to the JSON
             game_stats = get_game_history_stats(request)
             client_msg['games_played'] = game_stats['games_played']
@@ -267,7 +260,6 @@ def game_history(request) :
     history_html = ""
  
     if not request.user.is_authenticated() :
-
         # Unathenticated user, redirect the user to the login page
         return render_to_response('login.html',
                 context_instance=RequestContext(request))
@@ -290,5 +282,12 @@ def game_history(request) :
 
 def clear_history(request) :
 
+    if not request.user.is_authenticated() :
+        # Unathenticated user, redirect the user to the login page
+        return render_to_response('login.html',
+                context_instance=RequestContext(request))
+
     History.objects.all().delete()
+
+    return game_history(request)
 
