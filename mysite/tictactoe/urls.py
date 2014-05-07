@@ -9,4 +9,5 @@ urlpatterns = patterns('',
     url(r'^next_turn/$', 'tictactoe.views.play_next_turn'),
     url(r'^new_game/$', 'tictactoe.views.start_new_game'),
     url(r'^history/$', 'tictactoe.views.game_history'),
+    url(r'^clear_history/$', 'tictactoe.views.clear_history'),
 )

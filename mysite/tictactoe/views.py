@@ -271,12 +271,26 @@ def game_history(request) :
         # Unathenticated user, redirect the user to the login page
         return render_to_response('login.html',
                 context_instance=RequestContext(request))
+    
+    # Read history records from database
+    user_id = User.objects.get(username=request.user.username).id
+    history_list = History.objects.filter(owner=user_id)
 
-    if request.method == 'GET' :
-        user_id = User.objects.get(username=request.user.username).id
-        history_list = History.objects.filter(owner=user_id)
-
+    # Pass history records back to the client
     return render_to_response('history.html',\
             {'player' : request.user.username,\
             'history_list' : history_list},\
             context_instance=RequestContext(request))
+
+#########################################################################
+#
+# The view to clear game history
+#
+#########################################################################
+
+def clear_history(request) :
+
+    History.objects.all().delete()
+
+    return game_history(request)
+

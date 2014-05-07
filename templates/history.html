@@ -7,6 +7,10 @@
     <form action="/tictactoe/new_game/" method="get"> {% csrf_token %}
         <input type="submit" class="sidebar_menu_button" name="back_to_game" value="Back To Game">
     </form>
+    
+    <form action="/tictactoe/clear_history/" method="put"> {%csrf_token %}
+        <input type="submit" class="sidebar_menu_button" name="clear_history" value="Clear History">
+    </form>
 
 {% endblock %}
 
