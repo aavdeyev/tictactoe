@@ -17,7 +17,7 @@ from django.contrib.auth.models import User
 
 from tictactoe.models import History
 
-from game import *
+from tictactoelib import *
 
 import json
 
@@ -130,10 +130,8 @@ def start_new_game(request) :
     for key in ['sqr1','sqr2','sqr3','sqr4','sqr5','sqr6','sqr7',\
             'sqr8','sqr9'] :
         request.session[key] = ''
-  
+
     request.session['status'] = 'CONTINUE'
-    # Computer always starts
-    request.session['sqr5'] = 'O'
 
     #---------------------------------------------------------------
     # Update the number of user's and computer's wins
@@ -176,65 +174,82 @@ def play_next_turn(request) :
  
     if request.method == 'POST' :
 
-        if request.POST.has_key('key_pressed'):
-           
-            usr_pressed = request.POST['key_pressed']
-            request.session[usr_pressed] = 'X' 
-            
-            print ("USR " + usr_pressed)
+        if request.POST.has_key('key_pressed') :
+
+            key_pressed = request.POST['key_pressed']
+            request.session[key_pressed] = 'X' 
+        
+            if check_user_won(request.session) : 
+                #-----------------------------------------------------        
+                # The user won
+                #-----------------------------------------------------
+                status = 'USER_WON'
  
-            # We start with step2 here since step1 is always center
-            result = step2(session = request.session,\
-                    usr_step1 = usr_pressed)
+            else :
+                #-----------------------------------------------------
+                # Keep playing - take a turn
+                #-----------------------------------------------------
 
-            print(result)
+                # Check to see if we can win in this turn
+                next_step = try_win(request.session) 
+       
+                if not next_step :
+                    # If we can't win now, check to see if we need to 
+                    # block the user from winning in this turn                    
+                    next_step = try_defense(request.session)
 
-            cmp_pressed = result['cmp_key']
+                    if not next_step :
+                        # Check to see if we can attack
+                        next_step = try_attack(request.session)
+                        
+                        if not next_step :
+                            # If tries above fail, just play random
+                            next_step = try_random(request.session)
+                                                           
+                # Update button info with the new computer-generated "O"                 
+                request.session[next_step] = 'O'  
+ 
+                if check_user_lost(request.session) :                    
+                    # The user lost                    
+                    status = 'USER_LOST'
+                                        
+                # Check if there is a draw        
+                if check_draw(request.session) :            
+                    status = 'DRAW'
+
+        #--------------------------------------------------------------
+        # Save game result if game is complete
+        #--------------------------------------------------------------
+ 
+        if status != 'CONTINUE' :            
+            owner = User.objects.get(username=request.user.username).id 
+            created = timezone.now()
+              
+            h = History(owner = owner, created = created, result = status)
+            try:
+                h.save() 
+            except Exception as err:
+                status = 'ERROR'
                                  
-            print ("CMP " + cmp_pressed)
+        #---------------------------------------------------------------
+        # Build JSON to send back to the client
+        #---------------------------------------------------------------
 
-            if check_user_won(request.session) :
-                status = 'USER_LOST'
-            elif check_user_lost(request.session) :
-                status = 'USER_WON'               
-            elif check_draw(request.session) :            
-                status = 'DRAW'
+        # Values to send to the client
+        client_msg = {'next_step' : next_step, 'status' : status}
 
-            #----------------------------------------------------------
-            # Save game result if game is complete
-            #----------------------------------------------------------
- 
-            if status != 'CONTINUE' :            
-                owner = User.objects.get(username=request.user.username).id 
-                created = timezone.now()
-                  
-                h = History(owner = owner, created = created, result = status)
-                try:
-                    h.save() 
-                except Exception as err:
-                    status = 'ERROR'                                 
-            #-----------------------------------------------------------
-            # Build JSON to send back to the client
-            #-----------------------------------------------------------
+        if status in ('USER_LOST', 'USER_WON', 'DRAW') :
 
-            # Values to send to the client
-            client_msg = {'next_step' : cmp_pressed, 'status' : status}
-
-
-            print(client_msg)
-
-            if status in ('USER_LOST', 'USER_WON', 'DRAW') :
-
-                print("draw_update")
-                # Add total number of wins/losses to the JSON
-                game_stats = get_game_history_stats(request)
-                client_msg['games_played'] = game_stats['games_played']
-                client_msg['user_wins'] = game_stats['user_wins']
-                client_msg['computer_wins'] = game_stats['computer_wins']
+            print("draw_update")
+            # Add total number of wins/losses to the JSON
+            game_stats = get_game_history_stats(request)
+            client_msg['games_played'] = game_stats['games_played']
+            client_msg['user_wins'] = game_stats['user_wins']
+            client_msg['computer_wins'] = game_stats['computer_wins']
                            
-            json_reply = json.dumps(client_msg)
+        json_reply = json.dumps(client_msg)
          
-            return HttpResponse(json_reply, content_type='application/json')
+        return HttpResponse(json_reply, content_type='application/json')
 
 ########################################################################
 #

@@ -119,7 +119,7 @@
                    // The function to update buttons asynchronously
                    //
                    function onTTTButtonClick(button_id) {
-
+                       
                        button = document.getElementById(button_id);
   
                        if (button.value.length == 0) {
@@ -128,6 +128,10 @@
 
                            // Mark the button clicked by the user with 'X'
                            button.value = 'X';
+
+                           if (button_id == 'sqr5') {
+                               return
+                           }
 
                            // Send key pressed to the server
                            $.ajax({
@@ -190,7 +194,7 @@
                    $(document).ready(function() {
 
                        $('#sqr1').click(function () {
-                           onTTTButtonClick('sqr1')
+                           onTTTButtonClick('sqr1');
                        }); 
 
                        $('#sqr2').click(function () {
@@ -205,9 +209,10 @@
                            onTTTButtonClick('sqr4')
                        });
 
-                       $('#sqr5').click(function () {
-                           onTTTButtonClick('sqr5')
-                       });
+                       //
+                       // No handler for sqr5 here since it is
+                       // always pressed by the computer
+                       //
 
                        $('#sqr6').click(function () {
                            onTTTButtonClick('sqr6')
@@ -232,7 +237,8 @@
                 <input type="button" name="sqr2" id="sqr2" class="ttt_button" value="">
                 <input type="button" name="sqr3" id="sqr3" class="ttt_button" value="">
                 <input type="button" name="sqr4" id="sqr4" class="ttt_button" value="">
-                <input type="button" name="sqr5" id="sqr5" class="ttt_button" value="">
+                <!-- Note that computer will always start with sqr5, so it is always "O" -->
+                <input type="button" name="sqr5" id="sqr5" class="ttt_button" value="O">
                 <input type="button" name="sqr6" id="sqr6" class="ttt_button" value="">
                 <input type="button" name="sqr7" id="sqr7" class="ttt_button" value="">
                 <input type="button" name="sqr8" id="sqr8" class="ttt_button" value="">
