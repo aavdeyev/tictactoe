@@ -124,17 +124,17 @@ def start_new_game(request) :
                 context_instance=RequestContext(request))
     
     #---------------------------------------------------------------
-    # Clear the key and reset status to 'continue'
+    # Clear the keys and reset status to 'continue'
     #---------------------------------------------------------------
-
+ 
+    # Button values will be stored under session as 'sqrx' keys
     for key in ['sqr1','sqr2','sqr3','sqr4','sqr5','sqr6','sqr7',\
             'sqr8','sqr9'] :
         request.session[key] = ''
 
-    # Computer always starts by hitting the center
-    request.session['sqr5'] = 'O'
-    request.session['status'] = 'CONTINUE'
-    # Computer has already completed step1 by hitting sqr5
+    # Computer always starts by hitting the center (square #5)
+    request.session['sqr5'] = "O"  
+    # Computer has already completed step1 by hitting square #5
     request.session['step_num'] = 2
     
     #---------------------------------------------------------------
@@ -175,38 +175,42 @@ def play_next_turn(request) :
  
     if request.method == 'POST' :
 
-        if request.POST.has_key('key_pressed'):
+        if request.POST.has_key('user_pressed'):
  
             # Read current step # from the session
             step_num = request.session['step_num']
            
             # Get user-pressed square id from JSON and save it 
             # in Django session
-            usr_pressed = request.POST['key_pressed']
-            request.session[usr_pressed] = 'X'
+            usr_pressed = request.POST['user_pressed']
             
+            request.session[usr_pressed] = 'X'
+
+            # Build keylist to pass over to the step procs
+            sqrs = {}
+            for key in ['sqr1', 'sqr2', 'sqr3', 'sqr4', 'sqr5', 'sqr6',\
+                    'sqr7', 'sqr8', 'sqr9'] :
+                sqrs[key] = request.session.get(key,'')
+
             if step_num == 2 :               
-                result = step2(session = request.session,\
-                        usr_step1 = usr_pressed)                
+                result = step2(usr_step1 = usr_pressed)                
             elif step_num == 3 :
-                result = step3(session = request.session,\
-                        usr_step2 = usr_pressed)
+                result = step3(sqrs = sqrs, usr_step2 = usr_pressed,\
+                        branch = request.session['branch'])
             elif step_num == 4 :
-                result = step4(session = request.session,\
-                        usr_step3 = usr_pressed)
+                result = step4(sqrs = sqrs, usr_step3 = usr_pressed,\
+                        branch = request.session['branch'])
             elif step_num == 5 :
-                result = step5(session = request.session,\
-                        usr_step4 = usr_pressed)
-                                    
-            cmp_pressed = result['cmp_key']
+                result = step5(sqrs = sqrs, usr_step4 = usr_pressed,\
+                        branch = request.session['branch'])
+                                        
+            computer_pressed = result['cmp_key']
             status = result['status']
             request.session['branch'] = result['branch']
 
-            request.session[cmp_pressed] = 'O'
+            request.session[computer_pressed] = 'O'
             request.session['step_num'] = step_num + 1
-                                 
-            print ("CMP " + cmp_pressed)
-
+       
             #----------------------------------------------------------
             # Save game result if game is complete
             #----------------------------------------------------------
@@ -225,7 +229,7 @@ def play_next_turn(request) :
             #-----------------------------------------------------------
 
             # Values to send to the client
-            client_msg = {'next_step' : cmp_pressed, 'status' : status}
+            client_msg = {'next_step' : computer_pressed, 'status' : status}
 
             if status in ('USER_LOST', 'USER_WON', 'DRAW') :
                 
@@ -236,7 +240,7 @@ def play_next_turn(request) :
                 client_msg['computer_wins'] = game_stats['computer_wins']
                            
             json_reply = json.dumps(client_msg)
-         
+        
             return HttpResponse(json_reply, content_type='application/json')
 
 ########################################################################

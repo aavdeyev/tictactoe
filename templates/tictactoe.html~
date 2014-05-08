@@ -138,13 +138,13 @@
                                type: 'POST',
                                url: "/tictactoe/next_turn/",
                                data: {
-                                   'key_pressed' : button_id,
+                                   'user_pressed' : button_id,
                                    'csrfmiddlewaretoken' : '{{ csrf_token }}'
                                },                                                                              
                                success: function(data) {
 
                                    status = data['status'].toUpperCase();
-                                   next_step = data['next_step'];
+                                   next_step = data['next_step'];                                   
 
                                    // Check to see if the game isn't finished 
                                    // yet. if it isn't, mark proper button with 'O'
