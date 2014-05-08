@@ -117,8 +117,8 @@ def register_success(request) :
 ##################################################################
 
 def start_new_game(request) :
-    if not request.user.is_authenticated() :
 
+    if not request.user.is_authenticated() :
         # Unathenticated user, redirect the user to the login page
         return render_to_response('login.html',
                 context_instance=RequestContext(request))
@@ -130,11 +130,13 @@ def start_new_game(request) :
     for key in ['sqr1','sqr2','sqr3','sqr4','sqr5','sqr6','sqr7',\
             'sqr8','sqr9'] :
         request.session[key] = ''
-  
-    request.session['status'] = 'CONTINUE'
-    # Computer always starts
-    request.session['sqr5'] = 'O'
 
+    # Computer always starts by hitting the center
+    request.session['sqr5'] = 'O'
+    request.session['status'] = 'CONTINUE'
+    # Computer has already completed step1 by hitting sqr5
+    request.session['step_num'] = 2
+    
     #---------------------------------------------------------------
     # Update the number of user's and computer's wins
     #---------------------------------------------------------------
@@ -160,15 +162,12 @@ def start_new_game(request) :
 ###################################################################
 #
 # The main view to handle user's mouse clicks during the game.
-# It is using Ajax to update buttons asynchronously
+# It is using Ajax/JSON to update buttons asynchronously
 #
 ###################################################################
 
 def play_next_turn(request) :
-
-    next_step = ''
-    status = 'CONTINUE'
- 
+    
     if not request.user.is_authenticated() :
         # Unathenticated user, redirect the user to the login page
         return render_to_response('login.html',
@@ -177,28 +176,33 @@ def play_next_turn(request) :
     if request.method == 'POST' :
 
         if request.POST.has_key('key_pressed'):
-           
-            usr_pressed = request.POST['key_pressed']
-            request.session[usr_pressed] = 'X' 
-            
-            print ("USR " + usr_pressed)
  
-            # We start with step2 here since step1 is always center
-            result = step2(session = request.session,\
-                    usr_step1 = usr_pressed)
-
-            print(result)
-
+            # Read current step # from the session
+            step_num = request.session['step_num']
+           
+            # Get user-pressed square id from JSON and save it 
+            # in Django session
+            usr_pressed = request.POST['key_pressed']
+            request.session[usr_pressed] = 'X'
+            
+            if step_num == 2 :               
+                result = step2(session = request.session,\
+                        usr_step1 = usr_pressed)                
+            elif step_num == 3 :
+                result = step3(session = request.session,\
+                        usr_step2 = usr_pressed)
+            elif step_num == 4 :
+                result = step4(session = request.session,\
+                        usr_step3 = usr_pressed)
+                                    
             cmp_pressed = result['cmp_key']
+            status = result['status']
+            request.session['branch'] = result['branch']
+
+            request.session[cmp_pressed] = 'O'
+            request.session['step_num'] = step_num + 1
                                  
             print ("CMP " + cmp_pressed)
-
-            if check_user_won(request.session) :
-                status = 'USER_LOST'
-            elif check_user_lost(request.session) :
-                status = 'USER_WON'               
-            elif check_draw(request.session) :            
-                status = 'DRAW'
 
             #----------------------------------------------------------
             # Save game result if game is complete
@@ -219,9 +223,6 @@ def play_next_turn(request) :
 
             # Values to send to the client
             client_msg = {'next_step' : cmp_pressed, 'status' : status}
-
-
-            print(client_msg)
 
             if status in ('USER_LOST', 'USER_WON', 'DRAW') :
 

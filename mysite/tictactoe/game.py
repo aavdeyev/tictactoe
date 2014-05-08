@@ -6,7 +6,7 @@ from tictactoe.models import History
 #
 #  Computer generated step2
 #
-#     Input: Django session and user step 1 ('sqrX')
+#     Input: Django session with sqrx keys and user step 1 in 'sqrx' format
 #     Output:  Dictionary with the followin keys: cmp_key, branch and 
 #             status
 # 
@@ -52,11 +52,13 @@ def step2(session, usr_step1) :
         #         O -> ? ? ?
 
         cmp_step2 = opposite_corner(usr_step1)
-        return {'cmp_key' : cmp_step2, 'branch' : 'undetermined1',\
+        return {'cmp_key' : cmp_step2, 'branch' : 'undetermined_1',\
                 'status' : 'CONTINUE'}
 
 
-def step3(session, branch, usr_step2) :
+def step3(session, usr_step2) :
+
+    branch = session['branch']
 
     if branch == 'usr_will_lose_1' :
         
@@ -67,9 +69,9 @@ def step3(session, branch, usr_step2) :
         #             ? O X
         #        O -> ? ? ?          
         cmp_step3 = win(session)        
-
         if cmp_step3 :
-            status = 'USER_LOST'
+            return {'cmp_key' : cmp_step3, 'branch' : 'usr_will_lose_1', 'status' : 'USER_LOST'}
+
         else : 
             # Complete winning triangle, for example, as follows:
             #
@@ -79,7 +81,7 @@ def step3(session, branch, usr_step2) :
             cmp_step3 = complete_winning_triangle(session)
             status = 'CONTINUE' 
 
-        return {'cmp_key' : cmp_step3, 'branch' : 'usr_will_lose_1', 'status' : status}
+            return {'cmp_key' : cmp_step3, 'branch' : 'usr_will_lose_1', 'status' : 'CONTINUE'}
 
     elif branch == 'undetermined_1' :
         
@@ -96,9 +98,9 @@ def step3(session, branch, usr_step2) :
             #              O ? ?
             # If we do, we'll need to block the "XX"
             # Note that it will automatically build a winning triangle
-
+          
             cmp_step3 = block(session)
-                           
+                                                  
             if not cmp_step3 :
 
                 # Otherwise build a winning triangle, for example
@@ -128,35 +130,46 @@ def step3(session, branch, usr_step2) :
                     'status' : 'CONTINUE'}
 
 
-def step4(session, branch, usr_step3) :
+def step4(session, usr_step3) :
 
-    if branch == 'usr_will_lose_1' :
+    branch = session['branch']
 
+    if branch in ('usr_will_lose_1', 'usr_will_lose_2') :
         # Proceed to the next step to win
         cmp_step4 = win(session)
-
-                     
-    elif branch == 'usr_will_lose_2' :
-
-        print('TBD')
-
-    elif branch == 'undetermined1' :
+    
+        return {'cmp_key' : cmp_step4, 'branch' : branch,\
+                'status' : 'USER_LOST'} 
+                  
+    elif branch == 'undetermined_1' :
 
         #----------------------------------------------------
         # Now our chance for victory is low, only if the user
         # makes an obvious error will we win
         #-----------------------------------------------------
 
-        cmp_step4 = block(session)
-        if not cmp_step4 :
-            cmp_step4 = win(session)
-        elif not try4 :
+        cmp_step4 = win(session)
+        # User lost
+        if cmp_step4 :
+            return {'cmp_key' : cmp_step4, 'branch' : 'undetermined_1',\
+                    'status' : 'USER_LOST'}
+        
+        # Try to hit on a side
+        if not session.get('sqr2','') :
+            cmp_step4 = 'sqr2'
+        elif not session.get('sqr4','') :
+            cmp_step4 = 'sqr4'
+        elif not session.get('sqr6','') :
+            cmp_step4 = 'sqr6'
+        elif not session.get('sqr8','') :
+            cmp_step4 = 'sqr8'
+
+        if not cmp_step4 :        
             cmp_step4 = random(session)
 
-        if usr_step_count == 3 :
-            return cmp_step4
-                             
-
+        return {'cmp_key' : cmp_step4, 'branch' : 'undetermined_1',\
+                    'status' : 'CONTINUE'}
+                                                        
 def on_a_side(sqr) :
 
     if sqr in ('sqr2','sqr4','sqr6','sqr9') :
