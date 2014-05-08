@@ -191,6 +191,12 @@ def play_next_turn(request) :
             elif step_num == 3 :
                 result = step3(session = request.session,\
                         usr_step2 = usr_pressed)
+            elif step_num == 4 :
+                result = step4(session = request.session,\
+                        usr_step3 = usr_pressed)
+            elif step_num == 5 :
+                result = step5(session = request.session,\
+                        usr_step4 = usr_pressed)
                                     
             cmp_pressed = result['cmp_key']
             status = result['status']

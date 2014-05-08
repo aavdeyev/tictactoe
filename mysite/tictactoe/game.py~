@@ -87,6 +87,8 @@ def step3(session, usr_step2) :
         
         if on_a_side(usr_step2) :
 
+            print ('XXXXXXXXXXXX')
+
             #-------------------------------------------------------------
             # The user will lose. We will name this branch usr_will_lose_2                        
             #-------------------------------------------------------------
@@ -110,7 +112,6 @@ def step3(session, usr_step2) :
 
                 cmp_step3 = complete_winning_triangle(session)
             
-
             return {'cmp_key' : cmp_step3, 'branch' : 'usr_will_lose_2',\
                     'status' : 'CONTINUE'}
         else :        
@@ -122,8 +123,7 @@ def step3(session, usr_step2) :
             #              O ? ?
             #----------------------------------------------------
 
-            # We need to put O in between the two 'X's
-
+            # We need to put O in between the two 'X's 
             cmp_step3 = block(session)
 
             return {'cmp_key' : cmp_step3, 'branch' : 'undetermined_1',\
@@ -133,6 +133,8 @@ def step3(session, usr_step2) :
 def step4(session, usr_step3) :
 
     branch = session['branch']
+
+    print("Branch: " + branch)
 
     if branch in ('usr_will_lose_1', 'usr_will_lose_2') :
         # Proceed to the next step to win
@@ -149,6 +151,10 @@ def step4(session, usr_step3) :
         #-----------------------------------------------------
 
         cmp_step4 = win(session)
+
+
+        print("CMP STEP 4: " + cmp_step4)
+
         # User lost
         if cmp_step4 :
             return {'cmp_key' : cmp_step4, 'branch' : 'undetermined_1',\
@@ -169,6 +175,21 @@ def step4(session, usr_step3) :
 
         return {'cmp_key' : cmp_step4, 'branch' : 'undetermined_1',\
                     'status' : 'CONTINUE'}
+
+def step5(session, usr_step4) :
+
+    branch = session['branch']
+
+    cmp_step5 = win(session)
+
+    if cmp_step5 :
+        return {'cmp_key' : cmp_step5, 'branch' : 'undetermined_1',\
+              'status' : 'USER_LOST'}
+
+    cmp_step5 = random(session)
+    
+    return {'cmp_key' : cmp_step5, 'branch' : 'undetermined_1',\
+             'status' : 'DRAW'}
                                                         
 def on_a_side(sqr) :
 

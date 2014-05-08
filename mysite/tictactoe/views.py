@@ -194,6 +194,9 @@ def play_next_turn(request) :
             elif step_num == 4 :
                 result = step4(session = request.session,\
                         usr_step3 = usr_pressed)
+            elif step_num == 5 :
+                result = step5(session = request.session,\
+                        usr_step4 = usr_pressed)
                                     
             cmp_pressed = result['cmp_key']
             status = result['status']
@@ -225,8 +228,7 @@ def play_next_turn(request) :
             client_msg = {'next_step' : cmp_pressed, 'status' : status}
 
             if status in ('USER_LOST', 'USER_WON', 'DRAW') :
-
-                print("draw_update")
+                
                 # Add total number of wins/losses to the JSON
                 game_stats = get_game_history_stats(request)
                 client_msg['games_played'] = game_stats['games_played']
