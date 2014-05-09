@@ -70,7 +70,7 @@
                   border-radius:20px;
                   border-style:solid;
                   border-width:4px;
-                  border-color:#888888;
+                  border-color:#888;
                   box-shadow:
                     inset 0 0 0 4px #999,
                     inset 0 0 0 8px #aaa,                    
@@ -82,6 +82,7 @@
               #ttt_inner_score_area {
                   display:table-cell;
                   vertical-align:middle;
+                  font-style: italic;
               }
   
           </style>
@@ -182,7 +183,7 @@
                                        printStatus('Game Over: You Won');
                                        alert("You Win!");
                                    } else if (status == "USER_LOST") {
-                                       printStatus('Game Over: You lost');
+                                       printStatus('Game Over: You Lost');
                                        alert("You Lose!");                               
                                    } else if (status == "DRAW") {
                                        printStatus('Game Over: Draw');
@@ -192,7 +193,7 @@
                                        printStatus(errMsg);
                                        alert(errMsg);
                                    } else {
-                                       printStatus('Your turn...'); 
+                                       printStatus('Your Turn...'); 
                                    }
 
                                    // Unblock event handling

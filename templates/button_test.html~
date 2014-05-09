@@ -24,54 +24,36 @@
         margin-right:0.3em;
         border-radius:15px;
         overflow:hidden;     
-        border-style:outset;
-        border-width:5px;
-        border-color:#666666;
+        border-style:solid;
+        border-width:7px;
+        border-color:#555555;
         box-shadow: 
             10px 10px 5px #888888;    
     }
 
     #header_left {
         display:table-cell;
-        table-layout:fixed; 
-        vertical-align:middle;      
+        table-layout:fixed;
         width:45%;
         background:#666666;
     }
 
-    #header_left_font {
-        padding-left:1em;
-        padding-bottom:0.5em; 
-        margin-bottom:0;        
-    }
-
     #header_right {
-        display:table-cell;
-        vertical-align: middle;
+        display:table-cell;  
         table-layout:fixed;      
         width:55%;        
         background:#666666;
     }
 
-    #header_right_font {
-        text-align:right;
-        padding-right:1em;        
-        text-align:right;
-        padding-right:1em;
-    }
-
     #sidebar {
         float:left;              
-        width:20vw;
+        width:21vw;
         height:45vw;
         background:#999999;
         text-align:center;
         margin-top:1.3em;
         margin-bottom:0.5em;
-        margin-left:0.3em; 
-        border-style:outset;
-        border-width:5px;
-        border-color:#666666;       
+        margin-left:0.3em;        
         border-radius:15px;
         box-shadow: 
             10px 10px 5px #888888;
@@ -93,29 +75,16 @@
         text-align:center;
         border-radius:15px;
         margin-bottom:1em;
-        border-style:outset;
-        border-width:5px;
-        border-color:#666666;
         box-shadow: 
             10px 10px 5px #888888;
     }
 
-    #footer_font {
-        margin-top:0;
-        padding-top:0.5em;
-        margin-bottom:0;
-        padding-bottom:0.5em;
-    }
-
-    .sidebar_menu_button { 
-        display: inline-block;             
+    .sidebar_menu_button {
+        
 	font-family: Arial, Helvetica, sans-serif;
-        margin-bottom:1em;
-	font-size: 17px;
+	font-size: 14px;
 	color: #0a0a0a;
-	width: 70%;
-        padding-top: 5px;
-        padding-bottom: 5px;
+	padding: 10px 20px;
 	background: -moz-linear-gradient(
 		top,
 		#eff2ef 0%,
@@ -127,7 +96,7 @@
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
 	border-radius: 10px;
-	border: 1px solid #040503;
+	border: 4px solid #040503;
 	-moz-box-shadow:
 		0px 1px 3px rgba(000,000,000,0.5),
 		inset 0px 0px 2px rgba(255,255,255,1);
@@ -152,16 +121,16 @@
 
     <div id="header">
        <div id="header_left">
-           <h1 id = "header_left_font">
+           <h1 style= "padding-left:1em;margin-bottom:0;font-style:italic;">
                Tic-Tac-Toe
             </h1>
         </div>
         <div id="header_right">
-            <h3 id="header_right_font">
+            <h3 style= "text-align:right;padding-right:1em;font-style:italic;">
 
             {% if user.is_authenticated %}
-                <p style="">
-                    Mode: single player; &nbsp;&nbsp; 
+                <p style="text-align:right;padding-right:1em;">
+                    Mode: Single Player; &nbsp;&nbsp; 
                     Player: {{player}} &nbsp;&nbsp; <a href = "/accounts/logout"> 
                     logout </a>
                 </p>
@@ -179,14 +148,14 @@
     </div> 
 
     <div id="sidebar">
-        <p style = "margin-top:0;padding-top:1.5em;">
+        <p style = "margin-top:0;padding-top:2em;">
             {% block sidebar %} 
             {% endblock %}            
         </p>                      
     </div>
 
     <div id="footer">
-        <p id = "footer_font">
+        <p style = "margin-top:0;padding-top:0.5em;margin-bottom:0;padding-bottom:0.5em;">
             Version 1.0
         </p>
     </div>

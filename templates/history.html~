@@ -8,7 +8,7 @@
         <input type="submit" class="sidebar_menu_button" name="back_to_game" value="Back To Game">
     </form>
     
-    <form action="/tictactoe/clear_history/" method="get"> {%csrf_token %}
+    <form action="/tictactoe/clear_history/" method="put"> {%csrf_token %}
         <input type="submit" class="sidebar_menu_button" name="clear_history" value="Clear History">
     </form>
 
@@ -18,9 +18,9 @@
 
     {% if user.is_authenticated %}
 
-        {% if form.errors %}
+        {% if hist_error %}
 
-            <p style="color: red;">Form Error: </p>
+            <p style="color: red;">Error reading game history: {{hist_error}} </p>
             <p {{form.errors}} </p>
 
         {% else %}           

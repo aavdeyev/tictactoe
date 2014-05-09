@@ -18,9 +18,9 @@
 
     {% if user.is_authenticated %}
 
-        {% if form.errors %}
+        {% if hist_error %}
 
-            <p style="color: red;">Form Error: </p>
+            <p style="color: red;">Error reading game history: {{hist_error}} </p>
             <p {{form.errors}} </p>
 
         {% else %}           
