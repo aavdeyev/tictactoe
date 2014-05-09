@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 
+{% extends 'base.html' %}
+
+{% block content %}
+
 <h2> Register </h2>
 
 <form action = "/accounts/register/" method="post"> {% csrf_token %}
@@ -9,3 +13,7 @@
 <input type = "submit" value = "Register"/>
 
 </form>
+
+<p style="margin-top:3.0em;"> Click <a href = "/accounts/login/"> here </a> to log in as existing user </p>
+
+{% endblock %}

@@ -118,11 +118,14 @@ def register_success(request) :
 
 def start_new_game(request) :
 
+    print("In start_new_game")
+
     if not request.user.is_authenticated() :
+        print("User is not authenticated")
         # Unathenticated user, redirect the user to the login page
         return render_to_response('login.html',
                 context_instance=RequestContext(request))
-    
+ 
     #---------------------------------------------------------------
     # Clear the keys and reset status to 'continue'
     #---------------------------------------------------------------
@@ -151,13 +154,12 @@ def start_new_game(request) :
     #---------------------------------------------------------------
 
     return render_to_response('tictactoe.html',\
-            {'session' : request.session,\
-            'status' : request.session['status'],\
+            {'status' : 'CONTINUE',\
             'player' : request.user.username,\
             'games_played' : games_played,\
             'you_win' : user_wins,\
             'computer_wins' : computer_wins},\
-            context_instance=RequestContext(request))        
+            context_instance=RequestContext(request))
             
 ###################################################################
 #
@@ -229,7 +231,8 @@ def play_next_turn(request) :
             #-----------------------------------------------------------
 
             # Values to send to the client
-            client_msg = {'next_step' : computer_pressed, 'status' : status}
+            client_msg = {'computer_pressed' : computer_pressed,\
+                    'status' : status}
 
             if status in ('USER_LOST', 'USER_WON', 'DRAW') :
                 

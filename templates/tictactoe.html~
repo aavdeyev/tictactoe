@@ -94,7 +94,14 @@
  
                <script type="text/javascript"> 
 
+                   //
+                   // We will set this to true when we need to wait for server reply
+                   //
+                   var waitingForServerReply = false;
+
+                   //
                    // Check to see if JQuery loaded successfully
+                   //
                    if (!window.jQuery) {    
                        alert("JQuery not loaded");
                    }
@@ -123,6 +130,14 @@
                        button = document.getElementById(button_id);
   
                        if (button.value.length == 0) {
+
+                           // Exit the proc if there are outstanding server                           
+                           if (waitingForServerReply) {
+                               return
+                           }
+
+                           // Block all event handling until we get server reply 
+                           waitingForServerReply = true;
                        
                            printStatus('Wait...');
 
@@ -144,7 +159,7 @@
                                success: function(data) {
 
                                    status = data['status'].toUpperCase();
-                                   next_step = data['next_step'];                                   
+                                   next_step = data['computer_pressed'];                                   
 
                                    // Check to see if the game isn't finished 
                                    // yet. if it isn't, mark proper button with 'O'
@@ -179,10 +194,16 @@
                                    } else {
                                        printStatus('Your turn...'); 
                                    }
+
+                                   // Unblock event handling
+                                   waitingForServerReply = false;
                                },
                                error: function(request, status, error){
-                                   alert("Ajax failed on button" + button_id +
+                                   alert("Ajax failed on button " + button_id +
                                        ":" + error);
+
+                                   // Unblock event handling
+                                   waitingForServerReply = false;
                                }
                            });
                        }                                                      

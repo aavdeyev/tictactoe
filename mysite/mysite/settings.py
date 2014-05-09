@@ -51,9 +51,9 @@ MIDDLEWARE_CLASSES = (
      'django.middleware.csrf.CsrfViewMiddleware',
 )
 
-
-
-
+TEMPLATE_CONTEXT_PROCESSORS = {
+    'django.contrib.auth.context_processors.auth'
+}
 
 ROOT_URLCONF = 'mysite.urls'
 

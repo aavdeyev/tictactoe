@@ -4,11 +4,15 @@ from tictactoe.models import History
 
 #######################################################################
 #
-#  Computer generated step2
+#  Computer generated step 2 of the game
 #
-#     Input: Key user pressed in step 1 in 'sqrx' format
-#     Output:  Dictionary with the followin keys: cmp_key, branch and 
-#             status
+#  Input: 
+#      usr_step1 - Key pressed by the user in step 1 in 'sqrx' format
+#  Returns:  
+#      Dictionary of the following keys: 
+#             cmp_key : sqr<x>, 
+#             branch : logical branch, 
+#             status : 'CONTINUE', 'USER_WON', 'USER_LOST' or 'DRAW'
 # 
 #######################################################################
 
@@ -55,6 +59,21 @@ def step2(usr_step1) :
         return {'cmp_key' : cmp_step2, 'branch' : 'undetermined_1',\
                 'status' : 'CONTINUE'}
 
+#######################################################################
+#
+#  Computer generated step 3 of the game
+#
+#  Input: 
+#      sqrs - Dictionary of squares in format 'sqr<x>' : {'O'|'X'}
+#      usr_step2 - Key pressed by the user in step 2 in 'sqr<x>' format
+#      branch - Logical branch
+#  Returns:  
+#      Dictionary with the following keys: 
+#             cmp_key : sqr<x>, 
+#             branch : logical branch, 
+#             status : 'CONTINUE', 'USER_WON', 'USER_LOST' or 'DRAW'
+# 
+#######################################################################
 
 def step3(sqrs, usr_step2, branch) :
 
@@ -68,7 +87,8 @@ def step3(sqrs, usr_step2, branch) :
         #        O -> ? ? ?          
         cmp_step3 = win(sqrs)        
         if cmp_step3 :
-            return {'cmp_key' : cmp_step3, 'branch' : 'usr_will_lose_1', 'status' : 'USER_LOST'}
+            return {'cmp_key' : cmp_step3,\
+                    'branch' : 'usr_will_lose_1', 'status' : 'USER_LOST'}
 
         else : 
             # Complete winning triangle, for example, as follows:
@@ -79,7 +99,8 @@ def step3(sqrs, usr_step2, branch) :
             cmp_step3 = complete_winning_triangle(sqrs)
             status = 'CONTINUE' 
 
-            return {'cmp_key' : cmp_step3, 'branch' : 'usr_will_lose_1', 'status' : 'CONTINUE'}
+            return {'cmp_key' : cmp_step3,\
+                    'branch' : 'usr_will_lose_1', 'status' : 'CONTINUE'}
 
     elif branch == 'undetermined_1' :
         
@@ -119,22 +140,37 @@ def step3(sqrs, usr_step2, branch) :
             #              ? O ?
             #              O ? ?
             #----------------------------------------------------
-
-            print("before block")
-
+ 
             # We need to put O in between the two 'X's 
             cmp_step3 = block(sqrs)
-
-            print("after block")
 
             return {'cmp_key' : cmp_step3, 'branch' : 'undetermined_1',\
                     'status' : 'CONTINUE'}
 
+#######################################################################
+#
+#  Computer generated step 4 of the game
+#
+#  Input: 
+#      sqrs - Dictionary of squares in format 'sqr<x>' : {'O'|'X'}
+#      usr_step3 - Key pressed by the user in step 3 in 'sqr<x>' format
+#      branch - Logical branch
+#  Returns:  
+#      Dictionary with the following keys: 
+#             cmp_key : sqr<x>, 
+#             branch : logical branch, 
+#             status : 'CONTINUE', 'USER_WON', 'USER_LOST' or 'DRAW'
+# 
+#######################################################################
 
 def step4(sqrs, usr_step3, branch) :
 
     if branch in ('usr_will_lose_1', 'usr_will_lose_2') :
-        # Proceed to the next step to win
+        #--------------------------------------------------------------
+        # We successfully built winning triangles in the previous step,
+        # so just win now
+        #--------------------------------------------------------------
+
         cmp_step4 = win(sqrs)
     
         return {'cmp_key' : cmp_step4, 'branch' : branch,\
@@ -147,6 +183,16 @@ def step4(sqrs, usr_step3, branch) :
         # makes an obvious error will we win
         #-----------------------------------------------------
 
+        # Check to see if user made obvious error in previous step
+        # by not blocking our 'O's
+        #
+        #  X O X
+        #  ? O ?
+        #  O ? ?
+        #    ^
+        #    | 
+        #    O  
+     
         cmp_step4 = win(sqrs)
 
         # User lost
@@ -154,7 +200,14 @@ def step4(sqrs, usr_step3, branch) :
             return {'cmp_key' : cmp_step4, 'branch' : 'undetermined_1',\
                     'status' : 'USER_LOST'}
         
-        # Try to hit on a side
+        # If the user didn't lose yet, try hitting on a side
+        #  X O X
+        #  ? O ? <-- O
+        #  O ? ?
+        #
+        # That will gives another chance to win if the user makes another
+        # mistake
+
         if not sqrs.get('sqr2','') :
             cmp_step4 = 'sqr2'
         elif not sqrs.get('sqr4','') :
@@ -165,12 +218,33 @@ def step4(sqrs, usr_step3, branch) :
             cmp_step4 = 'sqr8'
 
         if not cmp_step4 :        
-            cmp_step4 = random(sqrs)
+            cmp_step4 = hit_any(sqrs)
 
         return {'cmp_key' : cmp_step4, 'branch' : 'undetermined_1',\
                     'status' : 'CONTINUE'}
 
+#######################################################################
+#
+#  Computer generated step 5 of the game
+#
+#  Input: 
+#      sqrs - Dictionary of squares in format 'sqr<x>' : {'O'|'X'}
+#      usr_step4 - Key pressed by the user in step 4 in 'sqr<x>' format
+#      branch - Logical branch
+#  Returns:  
+#      Dictionary with the following keys: 
+#             cmp_key : sqr<x>, 
+#             branch : logical branch, 
+#             status : 'CONTINUE', 'USER_WON', 'USER_LOST' or 'DRAW'
+# 
+#######################################################################
+
 def step5(sqrs, usr_step4, branch) :
+
+    # Check to see if we can still win
+    #             X O X
+    #      O -->  ? O O
+    #             O X ?
 
     cmp_step5 = win(sqrs)
 
@@ -178,10 +252,26 @@ def step5(sqrs, usr_step4, branch) :
         return {'cmp_key' : cmp_step5, 'branch' : 'undetermined_1',\
               'status' : 'USER_LOST'}
 
-    cmp_step5 = random(sqrs)
+    # If we can't win, just hit any available square and get a draw       
+    cmp_step5 = hit_any(sqrs)
     
     return {'cmp_key' : cmp_step5, 'branch' : 'undetermined_1',\
              'status' : 'DRAW'}
+
+########################################################################
+#
+#  Function to check if the square is located on a side, for example:
+#
+#      ? X ?    
+#      ? ? ?
+#      ? ? ?
+#
+#  Input:
+#      sqr - square in format 'sqr<x>'
+#  Returns:
+#      True if on a side, False otherwise
+#
+########################################################################
                                                         
 def on_a_side(sqr) :
 
@@ -200,6 +290,28 @@ def opposite_corner(sqr) :
         return 'sqr1'
     elif sqr == 'sqr7' :
         return 'sqr3'
+
+#################################################################
+#
+#  This function will try to build a winning triangle which
+#  will give us victory in 2 steps. There are two possible types
+#  of winning triangles (see below)
+#
+#      O X X                         
+#      ? O ?      - Type 1 winnng triangle
+#      O X X
+#
+#      O X X
+#      ? O X      - Type 2 winning triangle
+#      O X ?
+#
+#  Input: 
+#       Dictionary of squares 'sqr<x>' : {'O'|'X'}
+#
+#  Returns:
+#       Next step needed to complete the triangle in 'sqr<x>' format
+#
+##################################################################
     
 def complete_winning_triangle(sqrs) :
    
@@ -217,6 +329,10 @@ def complete_winning_triangle(sqrs) :
     # if not, just return ""
     if  not sqr5 :
         return ""
+
+    #-----------------------------------------------------------
+    # Check to see if we have potential type 1 triangles
+    #----------------------------------------------------------
 
     if sqr1 and not sqr2 and not sqr3 and not sqr8 :
         return 'sqr3'
@@ -242,103 +358,46 @@ def complete_winning_triangle(sqrs) :
     elif sqr9 and not sqr3 and not sqr6 and not sqr4 :
         return 'sqr3'
 
+    #-----------------------------------------------------------
+    # Check to see if we have potential type 2 triangles
+    #-----------------------------------------------------------
+
+    if sqr1 and not sqr2 and not sqr3 and not sqr7 :
+        return 'sqr3'
+ 
+    elif sqr1 and not sqr4 and not sqr7 and not sqr3 :
+        return 'sqr7'
+  
+    elif sqr3 and not sqr1 and not sqr2 and not sqr9 :
+        return 'sqr1'
+ 
+    elif sqr3 and not sqr6 and not sqr9 and not sqr1 :
+        return 'sqr9'
+
+    elif sqr7 and not sqr4 and not sqr1 and not sqr9 :
+        return 'sqr1'
+
+    elif sqr7 and not sqr8 and not sqr9 and not sqr1 :
+        return 'sqr9'
+
+    elif sqr9 and not sqr8 and not sqr7 and not sqr3 :
+        return 'sqr7'
+    
+    elif sqr9 and not sqr3 and not sqr6 and not sqr7 :
+        return 'sqr3'
+
     else :
         return ''
- 
-####################################################################
-#
-# The proc to check if the user has won
-#
-# Input - Django sqrs
-# Returns - True or False
-#
-####################################################################
-
-def check_user_won(sqrs) :
-
-    sqr1 = sqrs.get('sqr1','')
-    sqr2 = sqrs.get('sqr2','')
-    sqr3 = sqrs.get('sqr3','')
-    sqr4 = sqrs.get('sqr4','')
-    sqr5 = sqrs.get('sqr5','')
-    sqr6 = sqrs.get('sqr6','')
-    sqr7 = sqrs.get('sqr7','')
-    sqr8 = sqrs.get('sqr8','')
-    sqr9 = sqrs.get('sqr9','')
-
-    if (sqr1 + sqr2 + sqr3 == 'XXX') or (sqr4 + sqr5 + sqr6 == 'XXX')\
-            or (sqr7 + sqr8 + sqr9 == 'XXX') or (sqr1 + sqr5 + sqr9 == 'XXX')\
-            or (sqr1 + sqr4 + sqr7 == 'XXX') or (sqr2 + sqr5 + sqr8 == 'XXX')\
-            or (sqr3 + sqr6 + sqr9 == 'XXX') or (sqr1 + sqr5 + sqr9 == 'XXX')\
-            or (sqr3 + sqr5 + sqr7 == 'XXX') :
-
-        return True
-    else :              
-        return False
-
-#####################################################################
-#
-# The proc to check if the user has lost
-#
-#  Input - Django sqrs
-#  Returns - True or False
-#
-#####################################################################
-
-def check_user_lost(sqrs) :
-
-    sqr1 = sqrs.get('sqr1','')
-    sqr2 = sqrs.get('sqr2','')
-    sqr3 = sqrs.get('sqr3','')
-    sqr4 = sqrs.get('sqr4','')
-    sqr5 = sqrs.get('sqr5','')
-    sqr6 = sqrs.get('sqr6','')
-    sqr7 = sqrs.get('sqr7','')
-    sqr8 = sqrs.get('sqr8','')
-    sqr9 = sqrs.get('sqr9','')
-
-    if (sqr1 + sqr2 + sqr3 == 'OOO') or (sqr4 + sqr5 + sqr6 == 'OOO')\
-            or (sqr7 + sqr8 + sqr9 == 'OOO') or (sqr1 + sqr5 + sqr9 == 'OOO')\
-            or (sqr1 + sqr4 + sqr7 == 'OOO') or (sqr2 + sqr5 + sqr8 == 'OOO')\
-            or (sqr3 + sqr6 + sqr9 == 'OOO') or (sqr1 + sqr5 + sqr9 == 'OOO')\
-            or (sqr3 + sqr5 + sqr7 == 'OOO') :
-
-        return True
-    else :              
-        return False
-
-#################################################################
-#
-# The proc to check if there is a draw
-#
-#  Input - Django sqrs
-#  Returns - True or False
-#
-#################################################################
-
-def check_draw(sqrs) :
-
-    sqr1 = sqrs.get('sqr1','')
-    sqr2 = sqrs.get('sqr2','')
-    sqr3 = sqrs.get('sqr3','')
-    sqr4 = sqrs.get('sqr4','')
-    sqr5 = sqrs.get('sqr5','')
-    sqr6 = sqrs.get('sqr6','')
-    sqr7 = sqrs.get('sqr7','')
-    sqr8 = sqrs.get('sqr8','')
-    sqr9 = sqrs.get('sqr9','')
-
-    if len(sqr1 + sqr2 + sqr3 + sqr4 + sqr5 + sqr6 + sqr7 + sqr8 + sqr9) == 9 :
-        return True
-    else :
-        return False
 
 ##################################################################
 #
-#  Win - win in this step if possible
+#  Win - See if we can win the game in this step
 #
-#  Input - Django sqrs
-#  Returns - Suggested next step (sqrX)
+#  Input: 
+#       Dictionary of squares 'sqr<x>' : {'O'|'X'}
+#
+#  Returns:
+#       Next step needed to win the game
 #
 ##################################################################
 
@@ -434,10 +493,14 @@ def win(sqrs) :
   
 ##################################################################
 #
-#  Block - Block the user from completing the line
+#  Block - Block the user from completing the line and, hence,
+#          winning the game
 #
-#  Input - Django sqrs
-#  Returns - Suggesed next step (sqrX) 
+#  Input: 
+#       Dictionary of squares 'sqr<x>' : {'O'|'X'}
+#
+#  Returns:
+#       Next step needed to block the user from winning
 #
 ##################################################################
 
@@ -544,14 +607,17 @@ def block(sqrs) :
 
 #################################################################
 #
-#  Just take random step 
+#  Just hit any button
 #
-#  Input - Django sqrs
-#  Returns - Next step (sqrX)
+#  Input: 
+#       Dictionary of squares 'sqr<x>' : {'O'|'X'}
+#
+#  Returns:
+#       hit_any square
 #
 ##################################################################
 
-def random(sqrs) :
+def hit_any(sqrs) :
    
     sqr1 = sqrs.get('sqr1','')
     sqr2 = sqrs.get('sqr2','')
@@ -606,8 +672,17 @@ def random(sqrs) :
 
 ########################################################################
 #
-# The proc to return game history stats in a dictionary
+# The fuction to return game history stats in a dictionary
 #
+#  Input:
+#     Django request
+#
+#  Returns:
+#      Dictionary of the following keys:
+#          games_played : Number of games played so far
+#          user_wins : Number of times user won so far
+#          computer_wins : Number of times computer won so far
+#          
 ########################################################################
 
 def get_game_history_stats(request) :
