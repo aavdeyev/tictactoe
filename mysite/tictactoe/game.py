@@ -39,7 +39,8 @@ def step2(user_step1) :
         return {'computer_pressed' : 'sqr1', 'branch' : 'usr_will_lose_1',\
                 'status' : 'CONTINUE',\
                 'warning' : 'You just made a fatal mistake and will '\
-                        'lose this game'}
+                        'lose this game.'\
+                        'You should never hit a side button in step 1'}
 
     else :
         #----------------------------------------------------------------
@@ -136,7 +137,8 @@ def step3(sqrs, user_step2, branch) :
                     'branch' : 'usr_will_lose_2',\
                     'status' : 'CONTINUE',\
                     'warning' : 'You just made a fatal mistake and will'\
-                            ' lose this game'}
+                            ' lose this game. You should never hit a'\
+                            ' side button in step 2'}
         else :   
       
             #----------------------------------------------------
@@ -342,7 +344,7 @@ def complete_winning_triangle(sqrs) :
         return ""
 
     #-----------------------------------------------------------
-    # Check to see if we have potential type 1 triangles
+    # Check to see if we have potential type 1 winning triangles
     #----------------------------------------------------------
 
     if sqr1 and not sqr2 and not sqr3 and not sqr8 :
@@ -370,7 +372,7 @@ def complete_winning_triangle(sqrs) :
         return 'sqr3'
 
     #-----------------------------------------------------------
-    # Check to see if we have potential type 2 triangles
+    # Check to see if we have potential type 2 winning triangles
     #-----------------------------------------------------------
 
     if sqr1 and not sqr2 and not sqr3 and not sqr7 :
@@ -504,8 +506,8 @@ def win(sqrs) :
   
 ##################################################################
 #
-#  Block - Block the user from completing the line and, hence,
-#          winning the game
+#  Block - Block the user from completing a line and winning the game 
+#      in the next step
 #
 #  Input: 
 #       Dictionary of squares 'sqr<x>' : {'O'|'X'}
