@@ -136,6 +136,8 @@ def start_new_game(request) :
     request.session['sqr5'] = "O"  
     # Computer has already completed step1 by hitting square #5
     request.session['step_num'] = 2
+
+    request.session['status'] = 'CONTINUE'
     
     #---------------------------------------------------------------
     # Update the number of user's and computer's wins
@@ -151,7 +153,7 @@ def start_new_game(request) :
     #---------------------------------------------------------------
 
     return render_to_response('tictactoe.html',\
-            {'status' : 'CONTINUE',\
+            {'status' : request.session['status'],\
             'player' : request.user.username,\
             'games_played' : games_played,\
             'you_win' : user_wins,\
@@ -204,36 +206,38 @@ def play_next_turn(request) :
                 result = step5(sqrs = sqrs, user_step4 = usr_pressed,\
                         branch = request.session['branch'])
                                         
-            computer_pressed = result['computer_pressed']
-            status = result['status']
-            request.session['branch'] = result['branch']
+            computer_pressed = result['computer_pressed']                        
             warning = result.get('warning','')
 
+            request.session['branch'] = result['branch']
             request.session[computer_pressed] = 'O'
             request.session['step_num'] = step_num + 1
+            request.session['status'] = result['status']
        
             #----------------------------------------------------------
             # Save game result if game is complete
             #----------------------------------------------------------
  
-            if status != 'CONTINUE' :            
+            if request.session['status'] != 'CONTINUE' :            
                 owner = User.objects.get(username=request.user.username).id 
                 created = timezone.now()
                   
-                h = History(owner = owner, created = created, result = status)
+                h = History(owner = owner, created = created,\
+                        result = request.session['status'])
                 try:
                     h.save() 
                 except Exception as err:
-                    status = 'ERROR'                                 
+                    request.session['status'] = 'ERROR' 
+ 
             #-----------------------------------------------------------
             # Build JSON to send back to the client
             #-----------------------------------------------------------
 
             # Values to send to the client
             client_msg = {'computer_pressed' : computer_pressed,\
-                    'status' : status}
+                    'status' : request.session['status']}
 
-            if status in ('USER_LOST', 'USER_WON', 'DRAW') :                
+            if request.session['status'] in ('USER_LOST', 'USER_WON', 'DRAW') :
                 # Add total number of wins/losses to the JSON
                 game_stats = get_game_history_stats(request)
                 client_msg['games_played'] = game_stats['games_played']
@@ -244,7 +248,7 @@ def play_next_turn(request) :
                 client_msg['warning'] = warning
                            
             json_reply = json.dumps(client_msg)
-   
+ 
             # Send JSON back to the browser
             return HttpResponse(json_reply, content_type='application/json')
 
@@ -263,7 +267,7 @@ def game_history(request) :
         # Unathenticated user, redirect the user to the login page
         return render_to_response('login.html',
                 context_instance=RequestContext(request))
-    
+
     # Read history records from database
     try:
         user_id = User.objects.get(username=request.user.username).id
@@ -287,7 +291,7 @@ def game_history(request) :
 def clear_history(request) :
 
     if not request.user.is_authenticated() :
-        # Unathenticated user, redirect the user to the login page
+        # Unauthenticated user, redirect the user to the login page
         return render_to_response('login.html',
                 context_instance=RequestContext(request))
 
@@ -296,3 +300,38 @@ def clear_history(request) :
     # Display clean history page
     return game_history(request)
 
+##########################################################################
+#
+# The view to continue game when "Back to Game" button is pressed
+#
+##########################################################################
+
+def continue_game(request) :
+
+    if not request.user.is_authenticated() :
+        # Unauthenticated user, redirect to the login page
+        return render_to_response('login.html',
+                context_instance=RequestContext(request))
+             
+    #---------------------------------------------------------------
+    # Update the number of user's and computer's wins
+    #---------------------------------------------------------------
+
+    game_stats = get_game_history_stats(request)
+    games_played = game_stats['games_played']
+    user_wins = game_stats['user_wins']
+    computer_wins = game_stats['computer_wins']
+        
+    #---------------------------------------------------------------
+    # Render the clean HTML page to the browser
+    #---------------------------------------------------------------
+
+    return render_to_response('tictactoe.html',\
+            {'status' : request.session['status'],\
+            'player' : request.user.username,\
+            'games_played' : games_played,\
+            'you_win' : user_wins,\
+            'computer_wins' : computer_wins},
+            context_instance=RequestContext(request))
+
+    

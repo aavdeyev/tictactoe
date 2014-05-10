@@ -264,12 +264,18 @@
  
                 </script>
 
-                <input type="button" name="sqr1" id="sqr1" class="ttt_button" value="">
-                <input type="button" name="sqr2" id="sqr2" class="ttt_button" value="">
-                <input type="button" name="sqr3" id="sqr3" class="ttt_button" value="">
-                <input type="button" name="sqr4" id="sqr4" class="ttt_button" value="">
-                <!-- Note that computer will always start with sqr5, so it is always "O" -->
-                <input type="button" name="sqr5" id="sqr5" class="ttt_button" value="O">
+    
+                <!-- You need to have 'django.core.context_processors.request' specified in 
+                    TEMPLATE_CONTEXT_PROCESSORS in order for request.session.sqr1 to work 
+                    
+                    Note that all request.session.sqrx except for sqr5 will be set to "" 
+                    in the beginning of the game. We will only need those tags in the case
+                    when we want to continue game after switching to another page -->
+                <input type="button" name="sqr1" id="sqr1" class="ttt_button" value="{{request.session.sqr1}}">
+                <input type="button" name="sqr2" id="sqr2" class="ttt_button" value="{{request.session.sqr2}}">
+                <input type="button" name="sqr3" id="sqr3" class="ttt_button" value="{{request.session.sqr3}}">
+                <input type="button" name="sqr4" id="sqr4" class="ttt_button" value="{{request.session.sqr4}}">                
+                <input type="button" name="sqr5" id="sqr5" class="ttt_button" value="{{request.session.sqr5}}">
                 <input type="button" name="sqr6" id="sqr6" class="ttt_button" value="">
                 <input type="button" name="sqr7" id="sqr7" class="ttt_button" value="">
                 <input type="button" name="sqr8" id="sqr8" class="ttt_button" value="">

@@ -52,7 +52,8 @@ MIDDLEWARE_CLASSES = (
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = {
-    'django.contrib.auth.context_processors.auth'
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.request'
 }
 
 ROOT_URLCONF = 'mysite.urls'
@@ -67,8 +68,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'django',
-        'USER': 'root',
-        'PASSWORD': 'dre2dful',
+        'USER': 'alex',
+        'PASSWORD': 'cisco123',
         'HOST': '127.0.0.1',
         'PORT': '3306',        
     }
