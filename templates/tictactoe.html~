@@ -161,9 +161,13 @@
                                dataType: 'json',
                                cache: false,
                                timeout: 8000,
-                               success: function(data) {                                   
+                               success: function(data) {                                  
                                    status = data['status'].toUpperCase();
-                                   next_step = data['computer_pressed'];                                   
+                                   next_step = data['computer_pressed']; 
+                                   warning = '';
+                                   if ('warning' in data) {
+                                       warning = data['warning'];
+                                   }
 
                                    // Check to see if the game isn't finished 
                                    // yet. if it isn't, mark proper button with 'O'
@@ -195,6 +199,8 @@
                                        errMsg = 'Error handling even on the server';
                                        printStatus(errMsg);
                                        window.alert(errMsg);
+                                   } else if (warning) {
+                                       window.alert(warning);
                                    } else {
                                        printStatus('Your Turn...'); 
                                    }

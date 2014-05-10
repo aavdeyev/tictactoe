@@ -175,7 +175,7 @@ def play_next_turn(request) :
     if request.method == 'POST' :
 
         if request.POST.has_key('user_pressed'):
- 
+           
             # Read current step # from the session
             step_num = request.session['step_num']
            
@@ -191,21 +191,23 @@ def play_next_turn(request) :
                     'sqr7', 'sqr8', 'sqr9'] :
                 sqrs[key] = request.session.get(key,'')
 
+            # Execute proper function to play the step            
             if step_num == 2 :               
-                result = step2(usr_step1 = usr_pressed)                
+                result = step2(user_step1 = usr_pressed)               
             elif step_num == 3 :
-                result = step3(sqrs = sqrs, usr_step2 = usr_pressed,\
+                result = step3(sqrs = sqrs, user_step2 = usr_pressed,\
                         branch = request.session['branch'])
             elif step_num == 4 :
-                result = step4(sqrs = sqrs, usr_step3 = usr_pressed,\
+                result = step4(sqrs = sqrs, user_step3 = usr_pressed,\
                         branch = request.session['branch'])
             elif step_num == 5 :
-                result = step5(sqrs = sqrs, usr_step4 = usr_pressed,\
+                result = step5(sqrs = sqrs, user_step4 = usr_pressed,\
                         branch = request.session['branch'])
                                         
             computer_pressed = result['cmp_key']
             status = result['status']
             request.session['branch'] = result['branch']
+            warning = result.get('warning','')
 
             request.session[computer_pressed] = 'O'
             request.session['step_num'] = step_num + 1
@@ -231,18 +233,19 @@ def play_next_turn(request) :
             client_msg = {'computer_pressed' : computer_pressed,\
                     'status' : status}
 
-            if status in ('USER_LOST', 'USER_WON', 'DRAW') :
-                
+            if status in ('USER_LOST', 'USER_WON', 'DRAW') :                
                 # Add total number of wins/losses to the JSON
                 game_stats = get_game_history_stats(request)
                 client_msg['games_played'] = game_stats['games_played']
                 client_msg['user_wins'] = game_stats['user_wins']
                 client_msg['computer_wins'] = game_stats['computer_wins']
+
+            if warning :
+                client_msg['warning'] = warning
                            
             json_reply = json.dumps(client_msg)
-
-            print(json_reply)
-        
+   
+            # Send JSON back to the browser
             return HttpResponse(json_reply, content_type='application/json')
 
 ########################################################################
@@ -290,5 +293,6 @@ def clear_history(request) :
 
     History.objects.all().delete()
 
+    # Display clean history page
     return game_history(request)
 

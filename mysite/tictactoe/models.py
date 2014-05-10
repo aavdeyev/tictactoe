@@ -5,8 +5,8 @@ class History(models.Model):
     result = models.CharField(max_length=16)
     created = models.DateTimeField()
 
+    # This will print a game record in game history    
     def __unicode__(self):
-
         if self.result.lower() == 'user_lost' :
             result_str = 'lost'
         elif self.result.lower() == 'user_won' :

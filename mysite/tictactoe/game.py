@@ -7,18 +7,18 @@ from tictactoe.models import History
 #  Computer generated step 2 of the game
 #
 #  Input: 
-#      usr_step1 - Key pressed by the user in step 1 in 'sqrx' format
+#      user_step1 - Key pressed by the user in step 1 in 'sqrx' format
 #  Returns:  
 #      Dictionary of the following keys: 
-#             cmp_key : sqr<x>, 
+#             computer_pressed : sqr<x>, 
 #             branch : logical branch, 
 #             status : 'CONTINUE', 'USER_WON', 'USER_LOST' or 'DRAW'
 # 
 #######################################################################
 
-def step2(usr_step1) :
+def step2(user_step1) :
 
-    if on_a_side(usr_step1) :
+    if on_a_side(user_step1) :
         #---------------------------------------------------------------
         #  If combination is as follows, the user will lose
         #
@@ -36,8 +36,10 @@ def step2(usr_step1) :
         #               ? ? ?
         #
 
-        return {'cmp_key' : 'sqr1', 'branch' : 'usr_will_lose_1',\
-                'status' : 'CONTINUE'}
+        return {'computer_pressed' : 'sqr1', 'branch' : 'usr_will_lose_1',\
+                'status' : 'CONTINUE',\
+                'warning' : 'You just made a fatal mistake and will '\
+                        'lose this game'}
 
     else :
         #----------------------------------------------------------------
@@ -55,8 +57,9 @@ def step2(usr_step1) :
         #              ? O ?
         #         O -> ? ? ?
 
-        cmp_step2 = opposite_corner(usr_step1)
-        return {'cmp_key' : cmp_step2, 'branch' : 'undetermined_1',\
+        computer_step2 = opposite_corner(user_step1)
+        return {'computer_pressed' : computer_step2,\
+                'branch' : 'undetermined_1',\
                 'status' : 'CONTINUE'}
 
 #######################################################################
@@ -65,17 +68,17 @@ def step2(usr_step1) :
 #
 #  Input: 
 #      sqrs - Dictionary of squares in format 'sqr<x>' : {'O'|'X'}
-#      usr_step2 - Key pressed by the user in step 2 in 'sqr<x>' format
+#      user_step2 - Key pressed by the user in step 2 in 'sqr<x>' format
 #      branch - Logical branch
 #  Returns:  
 #      Dictionary with the following keys: 
-#             cmp_key : sqr<x>, 
+#             computer_pressed : sqr<x>, 
 #             branch : logical branch, 
 #             status : 'CONTINUE', 'USER_WON', 'USER_LOST' or 'DRAW'
 # 
 #######################################################################
 
-def step3(sqrs, usr_step2, branch) :
+def step3(sqrs, user_step2, branch) :
 
     if branch == 'usr_will_lose_1' :
         
@@ -85,9 +88,9 @@ def step3(sqrs, usr_step2, branch) :
         #             ? X O
         #             ? O X
         #        O -> ? ? ?          
-        cmp_step3 = win(sqrs)        
-        if cmp_step3 :
-            return {'cmp_key' : cmp_step3,\
+        computer_step3 = win(sqrs)        
+        if computer_step3 :
+            return {'computer_pressed' : computer_step3,\
                     'branch' : 'usr_will_lose_1', 'status' : 'USER_LOST'}
 
         else : 
@@ -96,15 +99,15 @@ def step3(sqrs, usr_step2, branch) :
             #        ? X O
             #        ? O ?
             #        X ? ? <- O 
-            cmp_step3 = complete_winning_triangle(sqrs)
+            computer_step3 = complete_winning_triangle(sqrs)
             status = 'CONTINUE' 
 
-            return {'cmp_key' : cmp_step3,\
+            return {'computer_pressed' : computer_step3,\
                     'branch' : 'usr_will_lose_1', 'status' : 'CONTINUE'}
 
     elif branch == 'undetermined_1' :
         
-        if on_a_side(usr_step2) :
+        if on_a_side(user_step2) :
              
             #-------------------------------------------------------------
             # The user will lose. We will name this branch usr_will_lose_2                        
@@ -118,19 +121,22 @@ def step3(sqrs, usr_step2, branch) :
             # If we do, we'll need to block the "XX"
             # Note that it will automatically build a winning triangle
           
-            cmp_step3 = block(sqrs)
+            computer_step3 = block(sqrs)
                                                   
-            if not cmp_step3 :
+            if not computer_step3 :
 
                 # Otherwise build a winning triangle, for example
                 #         O -> ? ? X
                 #              ? O ?
                 #              O X ?                
 
-                cmp_step3 = complete_winning_triangle(sqrs)
+                computer_step3 = complete_winning_triangle(sqrs)
             
-            return {'cmp_key' : cmp_step3, 'branch' : 'usr_will_lose_2',\
-                    'status' : 'CONTINUE'}
+            return {'computer_pressed' : computer_step3,\
+                    'branch' : 'usr_will_lose_2',\
+                    'status' : 'CONTINUE',\
+                    'warning' : 'You just made a fatal mistake and will'\
+                            ' lose this game'}
         else :   
       
             #----------------------------------------------------
@@ -142,9 +148,10 @@ def step3(sqrs, usr_step2, branch) :
             #----------------------------------------------------
  
             # We need to put O in between the two 'X's 
-            cmp_step3 = block(sqrs)
+            computer_step3 = block(sqrs)
 
-            return {'cmp_key' : cmp_step3, 'branch' : 'undetermined_1',\
+            return {'computer_pressed' : computer_step3,\
+                    'branch' : 'undetermined_1',\
                     'status' : 'CONTINUE'}
 
 #######################################################################
@@ -153,17 +160,17 @@ def step3(sqrs, usr_step2, branch) :
 #
 #  Input: 
 #      sqrs - Dictionary of squares in format 'sqr<x>' : {'O'|'X'}
-#      usr_step3 - Key pressed by the user in step 3 in 'sqr<x>' format
+#      user_step3 - Key pressed by the user in step 3 in 'sqr<x>' format
 #      branch - Logical branch
 #  Returns:  
 #      Dictionary with the following keys: 
-#             cmp_key : sqr<x>, 
+#             computer_pressed : sqr<x>, 
 #             branch : logical branch, 
 #             status : 'CONTINUE', 'USER_WON', 'USER_LOST' or 'DRAW'
 # 
 #######################################################################
 
-def step4(sqrs, usr_step3, branch) :
+def step4(sqrs, user_step3, branch) :
 
     if branch in ('usr_will_lose_1', 'usr_will_lose_2') :
         #--------------------------------------------------------------
@@ -171,9 +178,9 @@ def step4(sqrs, usr_step3, branch) :
         # so just win now
         #--------------------------------------------------------------
 
-        cmp_step4 = win(sqrs)
+        computer_step4 = win(sqrs)
     
-        return {'cmp_key' : cmp_step4, 'branch' : branch,\
+        return {'computer_pressed' : computer_step4, 'branch' : branch,\
                 'status' : 'USER_LOST'} 
                   
     elif branch == 'undetermined_1' :
@@ -193,11 +200,12 @@ def step4(sqrs, usr_step3, branch) :
         #    | 
         #    O  
      
-        cmp_step4 = win(sqrs)
+        computer_step4 = win(sqrs)
 
         # User lost
-        if cmp_step4 :
-            return {'cmp_key' : cmp_step4, 'branch' : 'undetermined_1',\
+        if computer_step4 :
+            return {'computer_pressed' : computer_step4,\
+                    'branch' : 'undetermined_1',\
                     'status' : 'USER_LOST'}
         
         # If the user didn't lose yet, try hitting on a side
@@ -209,18 +217,19 @@ def step4(sqrs, usr_step3, branch) :
         # mistake
 
         if not sqrs.get('sqr2','') :
-            cmp_step4 = 'sqr2'
+            computer_step4 = 'sqr2'
         elif not sqrs.get('sqr4','') :
-            cmp_step4 = 'sqr4'
+            computer_step4 = 'sqr4'
         elif not sqrs.get('sqr6','') :
-            cmp_step4 = 'sqr6'
+            computer_step4 = 'sqr6'
         elif not sqrs.get('sqr8','') :
-            cmp_step4 = 'sqr8'
+            computer_step4 = 'sqr8'
 
-        if not cmp_step4 :        
-            cmp_step4 = hit_any(sqrs)
+        if not computer_step4 :        
+            computer_step4 = hit_any(sqrs)
 
-        return {'cmp_key' : cmp_step4, 'branch' : 'undetermined_1',\
+        return {'computer_pressed' : computer_step4,\
+                    'branch' : 'undetermined_1',\
                     'status' : 'CONTINUE'}
 
 #######################################################################
@@ -229,33 +238,35 @@ def step4(sqrs, usr_step3, branch) :
 #
 #  Input: 
 #      sqrs - Dictionary of squares in format 'sqr<x>' : {'O'|'X'}
-#      usr_step4 - Key pressed by the user in step 4 in 'sqr<x>' format
+#      user_step4 - Key pressed by the user in step 4 in 'sqr<x>' format
 #      branch - Logical branch
 #  Returns:  
 #      Dictionary with the following keys: 
-#             cmp_key : sqr<x>, 
+#             computer_pressed : sqr<x>, 
 #             branch : logical branch, 
 #             status : 'CONTINUE', 'USER_WON', 'USER_LOST' or 'DRAW'
 # 
 #######################################################################
 
-def step5(sqrs, usr_step4, branch) :
+def step5(sqrs, user_step4, branch) :
 
     # Check to see if we can still win
     #             X O X
     #      O -->  ? O O
     #             O X ?
 
-    cmp_step5 = win(sqrs)
+    computer_step5 = win(sqrs)
 
-    if cmp_step5 :
-        return {'cmp_key' : cmp_step5, 'branch' : 'undetermined_1',\
+    if computer_step5 :
+        return {'computer_pressed' : computer_step5,\
+               'branch' : 'undetermined_1',\
               'status' : 'USER_LOST'}
 
     # If we can't win, just hit any available square and get a draw       
-    cmp_step5 = hit_any(sqrs)
+    computer_step5 = hit_any(sqrs)
     
-    return {'cmp_key' : cmp_step5, 'branch' : 'undetermined_1',\
+    return {'computer_pressed' : computer_step5,\
+             'branch' : 'undetermined_1',\
              'status' : 'DRAW'}
 
 ########################################################################

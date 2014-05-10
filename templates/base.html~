@@ -84,7 +84,8 @@
         background:#EEEEEE;        
         padding-left:2em;
         padding-top:1em; 
-        margin-top:1em;       
+        margin-top:1em; 
+        overflow:scroll;      
     }
 
     #footer {
@@ -95,7 +96,7 @@
         margin-bottom:1em;
         border-style:outset;
         border-width:5px;
-        border-color:#555555;
+        border-color:#666666;
         box-shadow: 
             10px 10px 5px #888888;
     }
