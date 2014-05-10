@@ -53,7 +53,7 @@
                   background:#EEEEEE;
                   padding-top: 0;
                   font-style:italic;
-                  font-size:20px;
+                  font-size:22px;
                   text-align:left;
                   padding-left:1em;
               }
@@ -83,6 +83,7 @@
                   display:table-cell;
                   vertical-align:middle;
                   font-style: italic;
+                  font-size: 18px;
               }
   
           </style>
@@ -91,7 +92,7 @@
 
                <form action="" method="post"> {% csrf_token %}
 
-               <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+               <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
  
                <script type="text/javascript"> 
 
@@ -106,7 +107,7 @@
                    if (!window.jQuery) {    
                        alert("JQuery not loaded");
                    }
-
+                   
                    //
                    // Update status panel with current status
                    //
@@ -134,7 +135,7 @@
 
                            // Exit the proc if there are outstanding server                           
                            if (waitingForServerReply) {
-                               return
+                                return
                            }
 
                            // Block all event handling until we get server reply 
@@ -152,13 +153,15 @@
                            // Send key pressed to the server
                            $.ajax({
                                type: 'POST',
-                               url: "/tictactoe/next_turn/",
+                               url: '/tictactoe/next_turn/',
                                data: {
                                    'user_pressed' : button_id,
                                    'csrfmiddlewaretoken' : '{{ csrf_token }}'
-                               },                                                                              
-                               success: function(data) {
-
+                               },
+                               dataType: 'json',
+                               cache: false,
+                               timeout: 8000,
+                               success: function(data) {                                   
                                    status = data['status'].toUpperCase();
                                    next_step = data['computer_pressed'];                                   
 
@@ -181,17 +184,17 @@
                                    // Show a popup when the game is finished
                                    if (status == "USER_WON") {                               
                                        printStatus('Game Over: You Won');
-                                       alert("You Win!");
+                                       window.alert("You Win!");
                                    } else if (status == "USER_LOST") {
                                        printStatus('Game Over: You Lost');
-                                       alert("You Lose!");                               
+                                       window.alert("You Lose!");                               
                                    } else if (status == "DRAW") {
                                        printStatus('Game Over: Draw');
-                                       alert("Draw");
+                                       window.alert("Draw");
                                    } else if (status == "ERROR")  {
                                        errMsg = 'Error handling even on the server';
                                        printStatus(errMsg);
-                                       alert(errMsg);
+                                       window.alert(errMsg);
                                    } else {
                                        printStatus('Your Turn...'); 
                                    }
@@ -200,9 +203,9 @@
                                    waitingForServerReply = false;
                                },
                                error: function(request, status, error){
-                                   alert("Ajax failed on button " + button_id +
+                                   window.alert("Ajax failed on button " + button_id +
                                        ":" + error);
-
+                                   
                                    // Unblock event handling
                                    waitingForServerReply = false;
                                }

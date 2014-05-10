@@ -118,10 +118,7 @@ def register_success(request) :
 
 def start_new_game(request) :
 
-    print("In start_new_game")
-
-    if not request.user.is_authenticated() :
-        print("User is not authenticated")
+    if not request.user.is_authenticated() :        
         # Unathenticated user, redirect the user to the login page
         return render_to_response('login.html',
                 context_instance=RequestContext(request))
@@ -243,7 +240,7 @@ def play_next_turn(request) :
                 client_msg['computer_wins'] = game_stats['computer_wins']
                            
             json_reply = json.dumps(client_msg)
-        
+   
             return HttpResponse(json_reply, content_type='application/json')
 
 ########################################################################
@@ -255,6 +252,7 @@ def play_next_turn(request) :
 def game_history(request) :
 
     history_html = ""
+    hist_error = ""
  
     if not request.user.is_authenticated() :
         # Unathenticated user, redirect the user to the login page
@@ -262,12 +260,16 @@ def game_history(request) :
                 context_instance=RequestContext(request))
     
     # Read history records from database
-    user_id = User.objects.get(username=request.user.username).id
-    history_list = History.objects.filter(owner=user_id)
-
+    try:
+        user_id = User.objects.get(username=request.user.username).id
+        history_list = History.objects.filter(owner=user_id)                    
+    except Exception as err:
+        hist_error = "Error retrieving game history: " + str(err)
+  
     # Pass history records back to the client
     return render_to_response('history.html',\
             {'player' : request.user.username,\
+             'hist_error' : hist_error,\
             'history_list' : history_list},\
             context_instance=RequestContext(request))
 
