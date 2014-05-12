@@ -19,6 +19,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.utils import timezone
 
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 from tictactoe.models import History
 
@@ -121,13 +122,9 @@ def register_success(request) :
 #
 ##################################################################
 
+@login_required
 def start_new_game(request) :
 
-    if not request.user.is_authenticated() :        
-        # Unathenticated user, redirect the user to the login page
-        return render_to_response('login.html',
-                context_instance=RequestContext(request))
- 
     #---------------------------------------------------------------
     # Clear the keys and reset status to 'continue'
     #---------------------------------------------------------------
@@ -172,13 +169,9 @@ def start_new_game(request) :
 #
 ###################################################################
 
+@login_required
 def play_next_turn(request) :
-    
-    if not request.user.is_authenticated() :
-        # Unathenticated user, redirect the user to the login page
-        return render_to_response('login.html',
-                context_instance=RequestContext(request))
- 
+      
     if request.method == 'POST' :
 
         if request.POST.has_key('user_pressed'):
@@ -263,16 +256,12 @@ def play_next_turn(request) :
 #
 #########################################################################
 
+@login_required
 def game_history(request) :
 
     history_html = ""
     hist_error = ""
- 
-    if not request.user.is_authenticated() :
-        # Unathenticated user, redirect the user to the login page
-        return render_to_response('login.html',
-                context_instance=RequestContext(request))
-
+  
     # Read history records from database
     try:
         user_id = User.objects.get(username=request.user.username).id
@@ -293,12 +282,8 @@ def game_history(request) :
 #
 #########################################################################
 
+@login_required
 def clear_history(request) :
-
-    if not request.user.is_authenticated() :
-        # Unauthenticated user, redirect the user to the login page
-        return render_to_response('login.html',
-                context_instance=RequestContext(request))
 
     History.objects.all().delete()
 
@@ -311,12 +296,8 @@ def clear_history(request) :
 #
 ##########################################################################
 
+@login_required
 def continue_game(request) :
-
-    if not request.user.is_authenticated() :
-        # Unauthenticated user, redirect to the login page
-        return render_to_response('login.html',
-                context_instance=RequestContext(request))
              
     #---------------------------------------------------------------
     # Update the number of user's and computer's wins
