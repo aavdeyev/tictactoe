@@ -100,8 +100,9 @@ def register_user(request) :
         if form.is_valid() :
             form.save()
             return HttpResponseRedirect('/accounts/register_success/')
-    
-    form = UserCreationForm()
+    else :
+           
+        form = UserCreationForm()
     
     return render_to_response('register.html', {'form' : form},\
             context_instance=RequestContext(request))

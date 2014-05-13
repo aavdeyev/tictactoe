@@ -8,12 +8,24 @@
 
 <form action = "/accounts/register/" method="post"> {% csrf_token %}
 
-{{form}}
+{{ form.username.errors }}
+
+<p> <label for="username"> Username: </label> {{form.username}} Required. </p>
+<p> 30 characters or fewer. Letters, digits and @/./+/-/_ only.</p>
+<p> </p>
+
+<p> <label for="password1"> Password: </label> {{form.password1}} </p>
+<p> </p>
+<p> </p>
+
+<p> <label for="password2"> Password Confirmation: </label> {{form.password2}} </p>
+<p> Enter the same password as above, for verification. </p>
+<p> </p>
 
 <input type = "submit" value = "Register"/>
 
 </form>
 
-<p style="margin-top:3.0em;"> Click <a href = "/accounts/login/"> here </a> to log in as existing user </p>
+<p style="margin-top:4.0em;"> Click <a href = "/accounts/login/"> here </a> to log in as existing user </p>
 
 {% endblock %}
