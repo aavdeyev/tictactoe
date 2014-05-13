@@ -27,15 +27,55 @@ from game import *
 
 import json
 
-################################################################
+##################################################################
 #
 # Function to Log user in
 #
-################################################################
+##################################################################
 
 def login(request) :
 
-    return render_to_response('login.html',
+    if request.method == 'POST' :
+
+        #------------------------------------------------------------
+        # The user clicked Submit button
+        #------------------------------------------------------------
+
+        if "register" in request.POST :
+
+            return HttpResponseRedirect('/accounts/register/')
+
+        else :
+             
+            username = request.POST.get('username', '')
+            password = request.POST.get('password', '')
+
+            # Authenticate the user
+            user = auth.authenticate(username = username,\
+                    password = password)
+
+            if user is not None :
+                auth.login(request, user)
+                # The 'next' query string parameter will be set to the 
+                # current absolute path by @login_required. Redirect 
+                # to the current absolute path or, if not specified, 
+                # to /tictactoe/new_game/
+                query_string = request.META.get('QUERY_STRING')
+                if query_string :
+                    redirect_url = query_string.replace('next=', '')
+                else :
+                    redirect_url = '/tictactoe/new_game/'
+
+                return HttpResponseRedirect(redirect_url)                        
+            else :
+                return HttpResponseRedirect('/accounts/invalid')
+    else:
+
+        #------------------------------------------------------------
+        # Initial form display
+        #------------------------------------------------------------
+
+        return render_to_response('login.html',
             context_instance=RequestContext(request))
 
 ################################################################
@@ -48,31 +88,6 @@ def invalid(request) :
 
    return render_to_response('invalid.html',
            context_instance=RequestContext(request))
-
-################################################################
-#
-# Function to authenticate a user
-#
-################################################################
-
-def auth_view(request) :
-
-    if "register" in request.POST :
-
-        return HttpResponseRedirect('/accounts/register/')
-
-    else :
-
-        username = request.POST.get('username', '')
-        password = request.POST.get('password', '')
-
-        user = auth.authenticate(username = username, password = password)
-
-        if user is not None :
-            auth.login(request, user)
-            return HttpResponseRedirect('/tictactoe/new_game')
-        else :
-            return HttpResponseRedirect('/accounts/invalid')
 
 #################################################################
 #
@@ -93,7 +108,10 @@ def logout(request) :
 
 def register_user(request) :
 
-    if (request.method == 'POST') :
+    if request.method == 'POST' :
+        #---------------------------------------------------------
+        # The user clicked Submit button
+        #---------------------------------------------------------
         
         form = UserCreationForm(request.POST)
 
@@ -101,7 +119,10 @@ def register_user(request) :
             form.save()
             return HttpResponseRedirect('/accounts/register_success/')
     else :
-           
+        #-----------------------------------------------------------
+        # Initial form or error display
+        #----------------------------------------------------------
+
         form = UserCreationForm()
     
     return render_to_response('register.html', {'form' : form},\
