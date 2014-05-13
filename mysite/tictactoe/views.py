@@ -37,15 +37,19 @@ def login(request) :
 
     if request.method == 'POST' :
 
-        #------------------------------------------------------------
-        # The user clicked Submit button
-        #------------------------------------------------------------
-
         if "register" in request.POST :
+
+            #------------------------------------------------------------
+            # The user clicked Register button
+            #------------------------------------------------------------
 
             return HttpResponseRedirect('/accounts/register/')
 
         else :
+
+            #------------------------------------------------------------
+            # The user clicked Login button
+            #------------------------------------------------------------
              
             username = request.POST.get('username', '')
             password = request.POST.get('password', '')
@@ -107,17 +111,30 @@ def logout(request) :
 ##################################################################
 
 def register_user(request) :
-
+  
     if request.method == 'POST' :
-        #---------------------------------------------------------
-        # The user clicked Submit button
-        #---------------------------------------------------------
-        
-        form = UserCreationForm(request.POST)
 
-        if form.is_valid() :
-            form.save()
-            return HttpResponseRedirect('/accounts/register_success/')
+        if "login" in request.POST :
+
+            print("Login")
+            #-----------------------------------------------------
+            # The user clicked Login button
+            #-----------------------------------------------------
+
+            return HttpResponseRedirect('/accounts/login/')
+
+        else:
+            print("Register")
+
+            #-----------------------------------------------------
+            # The user clicked Register button
+            #-----------------------------------------------------
+        
+            form = UserCreationForm(request.POST)
+
+            if form.is_valid() :
+                form.save()
+                return HttpResponseRedirect('/accounts/register_success/')                    
     else :
         #-----------------------------------------------------------
         # Initial form or error display
