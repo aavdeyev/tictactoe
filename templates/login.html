@@ -4,30 +4,44 @@
 
 {% block content %}
 
-{% if form.errors %}
+<h2> Login </h2>
 
-    <p class="error"> Sorry, that's not a valid user ! </p>
-
-{% endif %}
-
-<h1> Login </h1>
 <body>
-    <form action = "/accounts/auth/" method = "post"> {% csrf_token %}
+    <form action = "" method = "post"> {% csrf_token %}
 
-        <p>
-        <label for = "username"> User name: </label>    
-        <input type = "text" name = "username" value = "" id = "username">
-        </p>
-    
-        <p>
-        <label for = "password"> Password: </label>
-        <input type = "password" name = "password" value = "" id = "password"
-        </p>
+      <font color = "red"> {{form.errors}} </font>
+      
+      <table style = "width:100%;">
 
-        <p style="line-height: 2em; margin: 2em; margin-left: 4em; text-align: left">
-        <input type = "submit" value = "login" name = "login">
-        <input style = "margin-left:2.0em;" type = "submit" value = "register" name = "register">
-        </p>
+        <col width="30%">
+        <col width="70%">
+        <tr>
+            <td align = "left" valign = "bottom" height = "30px">
+                Username: 
+            </td> 
+            <td align = "left" valign = "bottom" height = "30px">
+                {{form.username}}                
+            </td>     
+        </tr> 
+        <tr>   
+           <td align = "left" valign = "bottom" height = "30px">           
+               Password:
+           </td>
+           <td align = "left" valign = "bottom" height = "30px">
+               {{form.password}}
+           </td>
+        </tr>
+      </table>
+
+      <div class = "button_row">
+      
+          <input type = "submit" value = "login" name = "login">
+
+          &nbsp&nbsp
+
+          <input type = "submit" value = "register" name = "register">
+
+      </div>
 
     </form>
 </body>

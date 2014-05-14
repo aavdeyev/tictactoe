@@ -10,8 +10,6 @@ urlpatterns = patterns('',
 
     url(r'^accounts/login/$', 'tictactoe.views.login'),
     url(r'^accounts/logout/$', 'tictactoe.views.logout'),
-    url(r'^accounts/auth/$', 'tictactoe.views.auth_view'),
-    url(r'^accounts/invalid/$', 'tictactoe.views.invalid'),
     url(r'^accounts/register/$', 'tictactoe.views.register_user'),
     url(r'^accounts/register_success/$', 'tictactoe.views.register_success'),
     url(r'^admin/', include(admin.site.urls)),

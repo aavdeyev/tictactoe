@@ -40,24 +40,22 @@ def login(request) :
 
         if "register" in request.POST :
 
-            #----------------------------------------------------------
+            #------------------------------------------------------------
             # The user clicked Register button
-            #----------------------------------------------------------
+            #------------------------------------------------------------
 
             return HttpResponseRedirect('/accounts/register/')
 
         else :
 
-            #----------------------------------------------------------
+            #------------------------------------------------------------
             # The user clicked Login button
-            #----------------------------------------------------------
+            #------------------------------------------------------------
         
-            form = AuthenticationForm(None, request.POST)
-           
-            if form.is_valid() :                
-                # Log the user in
-                auth.login(request, form.get_user())
-                                
+            form = AuthenticationForm(request.POST)
+
+            if form.is_valid() :
+                form.save()                
                 # The 'next' query string parameter will be set to the 
                 # current absolute path by @login_required. Redirect 
                 # to the current absolute path or, if not specified, 
@@ -67,18 +65,31 @@ def login(request) :
                     redirect_url = query_string.replace('next=', '')
                 else :
                     redirect_url = '/tictactoe/new_game/'
-                
-                return HttpResponseRedirect(redirect_url)   
+
+                return HttpResponseRedirect(redirect_url)                        
+            else :
+                return HttpResponseRedirect('/accounts/invalid')
     else:
 
         #------------------------------------------------------------
-        # Initial form or error display
+        # Initial form display
         #------------------------------------------------------------
 
-        form = AuthenticationForm()
-  
-    return render_to_response('login.html', {'form' : form},\
-            context_instance=RequestContext(request))
+        form = UserCreationForm()
+
+        return render_to_response('login.html', {'form' : form},\
+                context_instance=RequestContext(request))
+
+################################################################
+#
+# Function to display invalid user error
+#
+################################################################
+
+def invalid(request) :
+
+   return render_to_response('invalid.html',
+           context_instance=RequestContext(request))
 
 #################################################################
 #

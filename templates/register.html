@@ -8,38 +8,43 @@
 
 <form action = "/accounts/register/" method="post"> {% csrf_token %}
 
-{{ form.username.errors }}
+    <font color = "red"> {{ form.username.errors }} </font>
 
-<table style = "width:100%;">
-  <col width="30%">
-  <col width="70%">
-  <tr>
-      <td align = "left" valign="bottom"> Username: </td> 
-      <td align = "left" valign="bottom"> {{form.username}} Required </td>
-  </tr>
-  <tr>
-      <td></td>
-      <td align = "left"> 30 characters or fewer. Letters, digits and @/./+/-/_ only. </td>
-  </tr>
-  <tr>
-      <td align = "left" valign="bottom"> Password: </td>
-      <td align = "left" valign="bottom"> {{form.password1}} </td>
-  </tr>  
-  <tr>
-      <td align = "left" valign="bottom"> Password Confirmation: </td> 
-      <td align = "left" valign="bottom"> {{form.password2}} </td>
-  </tr>
-  <tr>  
-      <td> </td>
-      <td align = "left"> Enter the same password as above, for verification. </td>
-  </tr>
-</table>
-    
+    <table style = "width:100%;">
+      <col width="30%">
+      <col width="70%">
+      <tr>
+          <td align = "left" valign="bottom"> Username: </td> 
+          <td align = "left" valign="bottom"> {{form.username}} Required </td>
+      </tr>
+      <tr>
+          <td></td>
+          <td align = "left"> 30 characters or fewer. Letters, digits and @/./+/-/_ only. </td>
+      </tr>
+      <tr>
+          <td align = "left" valign="bottom" height="45px"> Password: </td>
+          <td align = "left" valign="bottom" height="45px"> {{form.password1}} </td>
+      </tr>  
+      <tr>
+          <td align = "left" valign="bottom" height="60px"> Password Confirmation: </td> 
+          <td align = "left" valign="bottom" height="60px"> {{form.password2}} </td>
+      </tr>
+      <tr>  
+          <td> </td>
+          <td align = "left"> Enter the same password as above, for verification. </td>
+      </tr>
+    </table>
 
-<input type = "submit" value = "Register"/>
+<div class = "button_row">
+
+    <input type = "submit" name = "register" value = "register">
+
+    &nbsp&nbsp
+        
+    <input type = "submit" name = "login" value = "login">
+
+</div>
 
 </form>
-
-<p style="margin-top:4.0em;"> Click <a href = "/accounts/login/"> here </a> to log in as existing user </p>
 
 {% endblock %}
