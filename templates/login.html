@@ -8,9 +8,14 @@
 
 <body>
     <form action = "" method = "post"> {% csrf_token %}
-
-      <font color = "red"> {{form.errors}} </font>
       
+      {% for field, error in form.errors.items %}
+        <font color = "red">
+          {% if field != '__all__' %}{{ field }}{% endif %}
+          {{ error | striptags }}
+        </font>
+      {% endfor %}
+            
       <table style = "width:100%;">
 
         <col width="30%">
