@@ -177,12 +177,10 @@
         <div id="header_right">
             <h3 id="header_right_font">
 
-            {% if user.is_authenticated %}
-                <p>
-                    Mode: single player &nbsp; | &nbsp; 
-                    Player: {{player}} &nbsp;&nbsp; | &nbsp <a href = "/accounts/logout"> 
-                    logout </a>
-                </p>
+            {% if user.is_authenticated %}                
+                Mode: single player &nbsp; | &nbsp; 
+                Player: {{player}} &nbsp;&nbsp; | &nbsp <a href = "/accounts/logout"> 
+                    logout </a>                
             {% endif %}
 
            </h3>
