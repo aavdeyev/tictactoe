@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 
+<head>
+
 <title> Tic-Tac-Toe </title>
 
-<head>
 <style type = "text/css">
 
     html, body {
@@ -37,6 +38,7 @@
         vertical-align:middle;      
         width:45%;
         background:#666666;
+        text-shadow: 0px 5px 15px #BBBBBB;
     }
 
     #header_left_font {
@@ -51,6 +53,7 @@
         table-layout:fixed;      
         width:55%;        
         background:#666666;
+        text-shadow: 0px 3px 9px #BBBBBB;
     }
 
     #header_right_font {
@@ -68,7 +71,8 @@
         text-align:center;
         margin-top:1.0em;
         margin-bottom:0.7em;
-        margin-left:0.3em; 
+        margin-left:0.3em;
+        padding-top:2.0em;
         border-style:outset;
         border-width:5px;
         border-color:#666666;       
@@ -85,7 +89,7 @@
         padding-left:2em;
         padding-top:1em; 
         margin-top:1em; 
-        overflow:auto;      
+        overflow:auto;
     }
 
     #footer {
@@ -108,11 +112,17 @@
         padding-bottom:0.5em;
     }
 
-    .button_row {        
+    .content_button_row {        
         margin-top: 3em;
         margin-bottom: 3em;
         width: 100%;
-        text-align: center;
+        text-align: center;        
+     }
+
+     .content_button {
+         font-family: Arial, Helvetica, sans-serif;
+         font-size: 17px;
+         font-weight: bold;
      }
 
     .sidebar_menu_button { 
@@ -168,9 +178,9 @@
             <h3 id="header_right_font">
 
             {% if user.is_authenticated %}
-                <p style="">
-                    Mode: single player; &nbsp;&nbsp; 
-                    Player: {{player}} &nbsp;&nbsp; <a href = "/accounts/logout"> 
+                <p>
+                    Mode: single player &nbsp; | &nbsp; 
+                    Player: {{player}} &nbsp;&nbsp; | &nbsp <a href = "/accounts/logout"> 
                     logout </a>
                 </p>
             {% endif %}
@@ -180,17 +190,13 @@
     </div> 
 
     <div id="content">
-        <p style = "margin-top:0;">
-            {% block content %}
-            {% endblock %}            
-        </p>
+        {% block content %}
+        {% endblock %}        
     </div> 
 
-    <div id="sidebar">
-        <p style = "margin-top:0;padding-top:1.5em;">
-            {% block sidebar %} 
-            {% endblock %}            
-        </p>                      
+    <div id="sidebar">        
+        {% block sidebar %}
+        {% endblock %}                    
     </div>
 
     <div id="footer">

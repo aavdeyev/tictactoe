@@ -13,6 +13,7 @@
         <font color = "red">
           {% if field != '__all__' %}{{ field }}{% endif %}
           {{ error | striptags }}
+          <br></br>
         </font>
       {% endfor %}
             
@@ -38,13 +39,13 @@
         </tr>
       </table>
 
-      <div class = "button_row">
+      <div class = "content_button_row">
       
-          <input type = "submit" value = "login" name = "login">
+          <input class = "content_button" type = "submit" value = "login" name = "login">
 
           &nbsp&nbsp
 
-          <input type = "submit" value = "register" name = "register">
+          <input class = "content_button" type = "submit" value = "register" name = "register">
 
       </div>
 

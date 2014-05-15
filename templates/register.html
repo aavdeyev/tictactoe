@@ -8,14 +8,21 @@
 
 <form action = "/accounts/register/" method="post"> {% csrf_token %}
 
-    <font color = "red"> {{ form.username.errors }} </font>
+    <font color = "red">
+      {{form.username.errors}}
+      {{form.password1.errors}}
+      {{form.password2.errors}}
+      <br> </br>  
+    </font>
 
     <table style = "width:100%;">
       <col width="30%">
       <col width="70%">
       <tr>
           <td align = "left" valign="bottom"> Username: </td> 
-          <td align = "left" valign="bottom"> {{form.username}} Required </td>
+          <td align = "left" valign="bottom"> {{form.username}} 
+            <font color = "blue"> Required </font> 
+          </td>
       </tr>
       <tr>
           <td></td>
@@ -35,13 +42,13 @@
       </tr>
     </table>
 
-<div class = "button_row">
+<div class = "content_button_row">
 
-    <input type = "submit" name = "register" value = "register">
+    <input class = "content_button" type ="submit" name = "register" value = "register">
 
     &nbsp&nbsp
         
-    <input type = "submit" name = "login" value = "login">
+    <input class = "content_button" type = "submit" name = "login" value = "login">
 
 </div>
 
