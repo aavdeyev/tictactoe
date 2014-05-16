@@ -22,7 +22,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
-from tictactoe.models import History
+from tictactoe.models import History, GameState
 
 from game import *
 
@@ -88,8 +88,16 @@ def login(request) :
 
 def logout(request) :
     
+    error = ''
+
+    # Save game state in a database. If fails, set error to display
+    # in the logout page
+    result = save_game_state(request)
+    if not result['success'] :         
+        error = result['error']
+
     auth.logout(request)
-    return render_to_response('logout.html')
+    return render_to_response('logout.html', {'error' : error})
 
 ##################################################################
 #

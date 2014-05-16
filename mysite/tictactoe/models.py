@@ -16,6 +16,12 @@ class History(models.Model):
         
         return '%s  %s' % (result_str, self.created)
 
+class GameState(models.Model):
+    owner = models.IntegerField()
+    sqrs = models.CharField(max_length=9)
+    step_num = models.IntegerField()
+    status = models.CharField(max_length=16)   
+
 
 
        

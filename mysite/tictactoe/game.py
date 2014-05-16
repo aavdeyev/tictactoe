@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 
-from tictactoe.models import History
+from tictactoe.models import History, GameState
 
 #######################################################################
 #
@@ -709,4 +709,77 @@ def get_game_history_stats(request) :
 
     return {'games_played' : games_played, 'user_wins' : user_wins,\
             'computer_wins' : computer_wins}
+
+########################################################################
+#
+# The function to save current game state
+#
+#  Input:
+#     Django request
+#
+#  Returns:
+#      Dictionary of the following keys:
+#          success : True on success, false on failure
+#          error : Error message on error
+#  
+#########################################################################
+
+def save_game_state(request) :
+        
+    user_id = User.objects.get(username=request.user.username).id
+        
+    session = request.session
     
+    sqr1 = session.get("sqr1")   
+    if not sqr1 :
+        sqr1 = " "
+
+    sqr2 = session.get("sqr2")   
+    if not sqr2 :
+        sqr2 = " "
+    
+    sqr3 = session.get("sqr3")   
+    if not sqr3 :
+        sqr3 = " "
+
+    sqr4 = session.get("sqr4")   
+    if not sqr4 :
+        sqr4 = " "
+
+    sqr5 = session.get("sqr5")   
+    if not sqr5 :
+        sqr5 = " "
+
+    sqr6 = session.get("sqr6")   
+    if not sqr6 :
+        sqr6 = " "
+
+    sqr7 = session.get("sqr7")   
+    if not sqr7 :
+        sqr7 = " "
+
+    sqr8 = session.get("sqr8")   
+    if not sqr8 :
+        sqr8 = " "
+
+    sqr9 = session.get("sqr9")  
+    if not sqr9 :
+        sqr9 = " "
+
+    sqrs = sqr1 + sqr2 + sqr3 + sqr4 + sqr5 + sqr6 + sqr7\
+            + sqr8 + sqr9
+
+    # Delete previous game state
+    GameState.objects.all().delete()
+
+    # Save the state for this game
+    state_obj = GameState(owner = user_id, sqrs = sqrs,\
+            step_num = session['step_num'], status = session['status'])
+
+    try:
+        state_obj.save()
+        return {'success' : True, 'error' : ''}
+    except Exception as err:
+        return {'success' : False, 'error' : err}
+    
+
