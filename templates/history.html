@@ -6,7 +6,7 @@ if {% if user.is_authenticated %}
 
     {% block sidebar %}
    
-        <form action="/tictactoe/continue_game/" method="get"> {% csrf_token %}
+        <form action="/tictactoe/back_to_game/" method="get"> {% csrf_token %}
             <input type="submit" class="sidebar_menu_button" name="back_to_game" value="Back To Game">
         </form>
     

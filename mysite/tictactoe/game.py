@@ -770,10 +770,11 @@ def save_game_state(request) :
             + sqr8 + sqr9
 
     # Delete previous game state
-    GameState.objects.all().delete()
+    GameState.objects.filter(owner=user_id).delete()
 
     # Save the state for this game
     state_obj = GameState(owner = user_id, sqrs = sqrs,\
+            branch = session['branch'],\
             step_num = session['step_num'], status = session['status'])
 
     try:

@@ -58,7 +58,9 @@ HOW TO PLAY
 -----------
 
 The URL to start a new game is /tictactoe/new_game/
-It will automatically redirect you to the login page
+The URL to contiunue the previous game (or start a new one if it is
+the first run) is /tictactoe/
+You will be automatically redirected to the login page
 You will need to register in the system in order to be able to play.
 You will be redirected to the registration page from the login page
 after you click 'register' button. After you register, you will need

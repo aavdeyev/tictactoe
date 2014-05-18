@@ -66,7 +66,7 @@ def login(request) :
                 if query_string :
                     redirect_url = query_string.replace('next=', '')
                 else :
-                    redirect_url = '/tictactoe/new_game/'
+                    redirect_url = '/tictactoe/load_last_game/'
                 
                 return HttpResponseRedirect(redirect_url)   
     else:
@@ -148,16 +148,76 @@ def register_success(request) :
 
 ##################################################################
 #
-# This will start a new game
+# This view will load the last saved game
+#
+###################################################################
+
+@login_required
+def load_last_game(request) :
+    #-------------------------------------------------------------
+    #
+    # Check to see if we have any games in progress
+    #
+    #-------------------------------------------------------------
+
+    user_id = User.objects.get(username=request.user.username).id
+    games_saved = GameState.objects.filter(owner=user_id).count()
+
+    if games_saved :
+        #
+        # We have a game in progress
+        #
+
+        last_game = GameState.objects.get(owner=user_id)
+        
+        request.session['step_num'] = last_game.step_num
+        request.session['status'] = last_game.status
+        request.session['branch'] = last_game.branch
+
+        sqrs = last_game.sqrs
+        for i in range(0, 9) :            
+            request.session['sqr' + str(i+1)] = sqrs[i].strip()
+
+        #
+        # Update the number of user's and computer's wins
+        #
+
+        game_stats = get_game_history_stats(request)
+        games_played = game_stats['games_played']
+        user_wins = game_stats['user_wins']
+        computer_wins = game_stats['computer_wins']
+        
+        #
+        # Render the clean HTML page to the browser
+        #
+
+        return render_to_response('tictactoe.html',\
+                {'status' : request.session['status'],\
+                'player' : request.user.username,\
+                'games_played' : games_played,\
+                'you_win' : user_wins,\
+                'computer_wins' : computer_wins},\
+                context_instance=RequestContext(request))
+    else :
+
+        #
+        # No history record found, start a new game
+        #
+
+        return start_new_game(request)    
+
+##################################################################
+#
+# This view will start a new game
 #
 ##################################################################
 
 @login_required
 def start_new_game(request) :
 
-    #---------------------------------------------------------------
+    #----------------------------------------------------------
     # Clear the keys and reset status to 'continue'
-    #---------------------------------------------------------------
+    #----------------------------------------------------------
  
     # Button values will be stored under session as 'sqrx' keys
     for key in ['sqr1','sqr2','sqr3','sqr4','sqr5','sqr6','sqr7',\
@@ -220,7 +280,7 @@ def play_next_turn(request) :
             for key in ['sqr1', 'sqr2', 'sqr3', 'sqr4', 'sqr5', 'sqr6',\
                     'sqr7', 'sqr8', 'sqr9'] :
                 sqrs[key] = request.session.get(key,'')
-
+ 
             # Execute proper function to play the step            
             if step_num == 2 :               
                 result = step2(user_step1 = usr_pressed)               
@@ -264,7 +324,7 @@ def play_next_turn(request) :
             # Values to send to the client
             client_msg = {'computer_pressed' : computer_pressed,\
                     'status' : request.session['status']}
-
+            
             if request.session['status'] in ('USER_LOST', 'USER_WON', 'DRAW') :
                 # Add total number of wins/losses to the JSON
                 game_stats = get_game_history_stats(request)
@@ -327,7 +387,7 @@ def clear_history(request) :
 ##########################################################################
 
 @login_required
-def continue_game(request) :
+def back_to_game(request) :
              
     #---------------------------------------------------------------
     # Update the number of user's and computer's wins
