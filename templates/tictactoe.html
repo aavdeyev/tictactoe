@@ -116,11 +116,13 @@
 	   }
 
 	   //
-	   // The function to update buttons asynchronously
+	   // The function to update user and computer pressed buttons
+           // asynchronously. It will take user pressed button Id as
+           // and input
 	   //
-	   function onTTTButtonClick(button_id) {
+	   function onTTTButtonClick(usr_button_id) {
 
-	       button = document.getElementById(button_id);
+	       button = document.getElementById(usr_button_id);
 
 	       if (button.value.length == 0) {
 
@@ -133,14 +135,7 @@
 		   waitingForServerReply = true;
 
 		   printStatus('Wait...');
-
-		   // Mark the button clicked by the user with 'X'
-		   button.value = 'X';
-
-		   if (button_id == 'sqr5') {
-		       return
-		   }
-
+		   		
 		   // Send key pressed to the server. Add timestamp
 		   // to the JSON so that IE doesn't cache it
 		   var tS=new Date().getTime();
@@ -149,7 +144,7 @@
 		       type: 'POST',
 		       url: '/tictactoe/next_turn/',
 		       data: {
-			   'user_pressed' : button_id,
+			   'user_pressed' : usr_button_id,
 			   'timestamp' : tS,
 			   'csrfmiddlewaretoken' : '{{ csrf_token }}'
 		       },
@@ -164,8 +159,12 @@
 			       warning = data['warning'];
 			   }
 
+                           // Mark the user clicked button with 'X'
+       		           document.getElementById(usr_button_id).value = 'X';
+
 			   // Check to see if the game isn't finished 
-			   // yet. if it isn't, mark proper button with 'O'
+			   // yet. if it isn't, mark the computer clicked 
+                           // button with 'O'
 			   if (next_step.length != 0) {
 			       document.getElementById(next_step).value="O";
 			   }
@@ -204,7 +203,7 @@
 			   waitingForServerReply = false;
 		       },
 		       error: function(request, status, error){
-			   window.alert("Ajax failed on button " + button_id +
+			   window.alert("Ajax failed on button " + usr_button_id +
 			       ":" + error);
 
 			   // Unblock event handling
@@ -237,8 +236,8 @@
 
 	       //
 	       // No handler for sqr5 here since it is
-	       // always pressed by the computer
-	       //
+	       // always pressed by the computer in
+	       // the first step
 
 	       $('#sqr6').click(function () {
 		   onTTTButtonClick('sqr6')
