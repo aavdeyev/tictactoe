@@ -12,7 +12,7 @@ from tictactoe.models import History, GameState
 #      Dictionary of the following keys: 
 #             computer_pressed : sqr<x>, 
 #             branch : logical branch, 
-#             status : 'CONTINUE', 'USER_WON', 'USER_LOST' or 'DRAW'
+#             status : 'USER_CONTINUE', 'USER_WON', 'USER_LOST' or 'DRAW'
 # 
 #######################################################################
 
@@ -37,7 +37,7 @@ def step2(user_step1) :
         #
 
         return {'computer_pressed' : 'sqr1', 'branch' : 'usr_will_lose_1',\
-                'status' : 'CONTINUE',\
+                'status' : 'USER_CONTINUE',\
                 'warning' : 'You just made a fatal mistake and will '\
                         'lose this game.'\
                         'You should never hit a side button in step 1'}
@@ -61,7 +61,7 @@ def step2(user_step1) :
         computer_step2 = opposite_corner(user_step1)
         return {'computer_pressed' : computer_step2,\
                 'branch' : 'undetermined_1',\
-                'status' : 'CONTINUE'}
+                'status' : 'USER_CONTINUE'}
 
 #######################################################################
 #
@@ -75,7 +75,7 @@ def step2(user_step1) :
 #      Dictionary with the following keys: 
 #             computer_pressed : sqr<x>, 
 #             branch : logical branch, 
-#             status : 'CONTINUE', 'USER_WON', 'USER_LOST' or 'DRAW'
+#             status : 'USER_CONTINUE', 'USER_WON', 'USER_LOST' or 'DRAW'
 # 
 #######################################################################
 
@@ -101,10 +101,10 @@ def step3(sqrs, user_step2, branch) :
             #        ? O ?
             #        X ? ? <- O 
             computer_step3 = complete_winning_triangle(sqrs)
-            status = 'CONTINUE' 
+            status = 'USER_CONTINUE' 
 
             return {'computer_pressed' : computer_step3,\
-                    'branch' : 'usr_will_lose_1', 'status' : 'CONTINUE'}
+                    'branch' : 'usr_will_lose_1', 'status' : 'USER_CONTINUE'}
 
     elif branch == 'undetermined_1' :
         
@@ -135,7 +135,7 @@ def step3(sqrs, user_step2, branch) :
             
             return {'computer_pressed' : computer_step3,\
                     'branch' : 'usr_will_lose_2',\
-                    'status' : 'CONTINUE',\
+                    'status' : 'USER_CONTINUE',\
                     'warning' : 'You just made a fatal mistake and will'\
                             ' lose this game. You should never hit a'\
                             ' side button in step 2'}
@@ -154,7 +154,7 @@ def step3(sqrs, user_step2, branch) :
 
             return {'computer_pressed' : computer_step3,\
                     'branch' : 'undetermined_1',\
-                    'status' : 'CONTINUE'}
+                    'status' : 'USER_CONTINUE'}
 
 #######################################################################
 #
@@ -168,7 +168,7 @@ def step3(sqrs, user_step2, branch) :
 #      Dictionary with the following keys: 
 #             computer_pressed : sqr<x>, 
 #             branch : logical branch, 
-#             status : 'CONTINUE', 'USER_WON', 'USER_LOST' or 'DRAW'
+#             status : 'USER_CONTINUE', 'USER_WON', 'USER_LOST' or 'DRAW'
 # 
 #######################################################################
 
@@ -232,7 +232,7 @@ def step4(sqrs, user_step3, branch) :
 
         return {'computer_pressed' : computer_step4,\
                     'branch' : 'undetermined_1',\
-                    'status' : 'CONTINUE'}
+                    'status' : 'USER_CONTINUE'}
 
 #######################################################################
 #
@@ -246,7 +246,7 @@ def step4(sqrs, user_step3, branch) :
 #      Dictionary with the following keys: 
 #             computer_pressed : sqr<x>, 
 #             branch : logical branch, 
-#             status : 'CONTINUE', 'USER_WON', 'USER_LOST' or 'DRAW'
+#             status : 'USER_CONTINUE', 'USER_WON', 'USER_LOST' or 'DRAW'
 # 
 #######################################################################
 

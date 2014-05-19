@@ -229,7 +229,7 @@ def start_new_game(request) :
     # Computer has already completed step1 by hitting square #5
     request.session['step_num'] = 2
 
-    request.session['status'] = 'CONTINUE'
+    request.session['status'] = 'USER_CONTINUE'
     
     #---------------------------------------------------------------
     # Update the number of user's and computer's wins
@@ -306,7 +306,7 @@ def play_next_turn(request) :
             # Save game result if game is complete
             #----------------------------------------------------------
  
-            if request.session['status'] != 'CONTINUE' :            
+            if request.session['status'] != 'USER_CONTINUE' :            
                 owner = User.objects.get(username=request.user.username).id 
                 created = timezone.now()
                   
