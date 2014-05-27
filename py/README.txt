@@ -43,9 +43,20 @@ TEMPLATE_DIRS = (
 
 #5: 
 
-    This isn't relevant to Django per se, I wasn't able to find a way
-    to source a local copy of JQuery from tictactoe.html, so I am still 
-    loading it via HTTP. That may explain some initial delay in the game
+    Need to have JQuery in static file dir and static vars setup
+    properly
+
+    STATIC_ROOT = '/var/www/static/'
+
+    STATIC_URL = '/static/'
+
+    STATICFILES_DIRS = (    
+        "/var/www/py/mysite/tictactoe/static/",
+    )
+
+    STATICFILES_FINDERS = 
+     ("django.contrib.staticfiles.finders.FileSystemFinder",
+     "django.contrib.staticfiles.finders.AppDirectoriesFinder")
 
 #6:
 
