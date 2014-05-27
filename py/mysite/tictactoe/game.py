@@ -775,7 +775,7 @@ def save_game_state(request) :
     GameState.objects.filter(owner=user_id).delete()
 
     created = timezone.now()
-
+           
     # Save the state for this game
     state_obj = GameState(owner = user_id, sqrs = sqrs,\
             branch = session['branch'],\

@@ -242,6 +242,7 @@ def start_new_game(request) :
     request.session['step_num'] = 2
 
     request.session['status'] = 'USER_CONTINUE'
+    request.session['branch'] = ''
     
     #---------------------------------------------------------------
     # Update the number of user's and computer's wins

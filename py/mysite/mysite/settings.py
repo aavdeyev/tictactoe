@@ -21,11 +21,11 @@ LOGIN_URL = '/accounts/login/'
 SECRET_KEY = '14+4&)*6pwg3g9*vbefcqghjl5vl&f$8#xu=a@iij)jsm!2z^6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['aavdeyev-ubuntu1.noip.me']
 
 TEMPLATE_DIRS = (
     '/var/www/py/templates',
@@ -101,5 +101,5 @@ STATICFILES_DIRS = (
     "/var/www/py/mysite/tictactoe/static/",
 )
 
-STATICFILES_FINDERS = ("django.contrib.staticfiles.finders.FileSystemFinder",
- "django.contrib.staticfiles.finders.AppDirectoriesFinder")
+#STATICFILES_FINDERS = ("django.contrib.staticfiles.finders.FileSystemFinder",
+# "django.contrib.staticfiles.finders.AppDirectoriesFinder")
