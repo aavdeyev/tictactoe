@@ -175,7 +175,7 @@ def load_last_game(request) :
         request.session['branch'] = last_game.branch
 
         sqrs = last_game.sqrs
-        for i in range(0, 9) :            
+        for i in range(0, 9) :                       
             request.session['sqr' + str(i+1)] = sqrs[i].strip()
 
         #
@@ -186,13 +186,25 @@ def load_last_game(request) :
         games_played = game_stats['games_played']
         user_wins = game_stats['user_wins']
         computer_wins = game_stats['computer_wins']
-        
-        #
-        # Render the clean HTML page to the browser
-        #
 
+        status = request.session['status']
+
+        if status == "USER_LOST" :
+            screen_status = "You lost at " + str(last_game.created)
+        elif status == "USER_WON" :
+            screen_status = "You won at " + str(last_game.created)
+        elif status == "DRAW" :
+            screen_status = "Draw at" + str(last_game.created)
+        else :
+            screen_status = "Your turn..."
+                   
+        #
+        # Render the page to the browser
+        # 
+             
         return render_to_response('tictactoe.html',\
-                {'status' : request.session['status'],\
+                {'status' : status,\
+                'screen_status' : screen_status,\
                 'player' : request.user.username,\
                 'games_played' : games_played,\
                 'you_win' : user_wins,\
@@ -239,13 +251,16 @@ def start_new_game(request) :
     games_played = game_stats['games_played']
     user_wins = game_stats['user_wins']
     computer_wins = game_stats['computer_wins']
+
+    screen_status = "Your turn..."
         
     #---------------------------------------------------------------
-    # Render the clean HTML page to the browser
+    # Render the clean HTML page to the browser        
     #---------------------------------------------------------------
 
     return render_to_response('tictactoe.html',\
             {'status' : request.session['status'],\
+            'screen_status' : screen_status,\
             'player' : request.user.username,\
             'games_played' : games_played,\
             'you_win' : user_wins,\
@@ -265,6 +280,14 @@ def play_next_turn(request) :
     if request.method == 'POST' :
 
         if request.POST.has_key('user_pressed'):
+
+            if request.session['status'] != 'USER_CONTINUE' :
+                json_reply =\
+                        json.dumps({'status' : request.session['status'],\
+                        'game_over' : 'true'})                          
+                # Tell the client that the game is over
+                return HttpResponse(json_reply,\
+                        content_type='application/json')
            
             # Read current step # from the session
             step_num = request.session['step_num']
@@ -336,7 +359,7 @@ def play_next_turn(request) :
                 client_msg['warning'] = warning
                            
             json_reply = json.dumps(client_msg)
- 
+                          
             # Send JSON back to the browser
             return HttpResponse(json_reply, content_type='application/json')
 
@@ -397,17 +420,29 @@ def back_to_game(request) :
     games_played = game_stats['games_played']
     user_wins = game_stats['user_wins']
     computer_wins = game_stats['computer_wins']
+
+    status = request.session['status']
+
+    if status == "USER_LOST" :
+        screen_status = "You lost "
+    elif status == "USER_WON" :
+        screen_status = "You won"
+    elif status == "DRAW" :
+        screen_status = "Draw"
+    else :
+        screen_status = "Your turn..."
         
     #---------------------------------------------------------------
-    # Render the clean HTML page to the browser
+    # Render the page to the browser
     #---------------------------------------------------------------
 
     return render_to_response('tictactoe.html',\
             {'status' : request.session['status'],\
+            'screen_status' : screen_status,\
             'player' : request.user.username,\
             'games_played' : games_played,\
             'you_win' : user_wins,\
-            'computer_wins' : computer_wins},
+            'computer_wins' : computer_wins},\
             context_instance=RequestContext(request))
 
     

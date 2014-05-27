@@ -21,8 +21,5 @@ class GameState(models.Model):
     sqrs = models.CharField(max_length=9)
     step_num = models.IntegerField()
     branch = models.CharField(max_length=16)
-    status = models.CharField(max_length=16)   
-
-
-
-       
+    status = models.CharField(max_length=16)
+    created = models.DateTimeField()       

@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 
 from tictactoe.models import History, GameState
 
+from django.utils import timezone
+
 #######################################################################
 #
 #  Computer generated step 2 of the game
@@ -347,56 +349,56 @@ def complete_winning_triangle(sqrs) :
     # Check to see if we have potential type 1 winning triangles
     #----------------------------------------------------------
 
-    if sqr1 and not sqr2 and not sqr3 and not sqr8 :
+    if (sqr1 == "O") and not sqr2 and not sqr3 and not sqr8 :
         return 'sqr3'
 
-    elif sqr1 and not sqr4 and not sqr7 and not sqr6 :
+    elif (sqr1 == "O") and not sqr4 and not sqr7 and not sqr6 :
         return 'sqr7'
 
-    elif sqr3 and not sqr1 and not sqr2 and not sqr8 :
+    elif (sqr3 == "O") and not sqr1 and not sqr2 and not sqr8 :
         return 'sqr1'
 
-    elif sqr3 and not sqr6 and not sqr9 and not sqr4 :
+    elif (sqr3 == "O") and not sqr6 and not sqr9 and not sqr4 :
         return 'sqr9'
 
-    elif sqr7 and not sqr4 and not sqr1 and not sqr6 :
+    elif (sqr7 == "O") and not sqr4 and not sqr1 and not sqr6 :
         return 'sqr1'
 
-    elif sqr7 and not sqr8 and not sqr9 and not sqr2 :
+    elif (sqr7 == "O") and not sqr8 and not sqr9 and not sqr2 :
         return 'sqr9'
 
-    elif sqr9 and not sqr8 and not sqr7 and not sqr2 :
+    elif (sqr9 == "O") and not sqr8 and not sqr7 and not sqr2 :
         return 'sqr7'
     
-    elif sqr9 and not sqr3 and not sqr6 and not sqr4 :
+    elif (sqr9 == "O") and not sqr3 and not sqr6 and not sqr4 :
         return 'sqr3'
 
     #-----------------------------------------------------------
     # Check to see if we have potential type 2 winning triangles
     #-----------------------------------------------------------
 
-    if sqr1 and not sqr2 and not sqr3 and not sqr7 :
+    if (sqr1 == "O") and not sqr2 and not sqr3 and not sqr7 :
         return 'sqr3'
  
-    elif sqr1 and not sqr4 and not sqr7 and not sqr3 :
+    elif (sqr1 == "O") and not sqr4 and not sqr7 and not sqr3 :
         return 'sqr7'
   
-    elif sqr3 and not sqr1 and not sqr2 and not sqr9 :
+    elif (sqr3 == "O") and not sqr1 and not sqr2 and not sqr9 :
         return 'sqr1'
  
-    elif sqr3 and not sqr6 and not sqr9 and not sqr1 :
+    elif (sqr3 == "O") and not sqr6 and not sqr9 and not sqr1 :
         return 'sqr9'
 
-    elif sqr7 and not sqr4 and not sqr1 and not sqr9 :
+    elif (sqr7 == "O") and not sqr4 and not sqr1 and not sqr9 :
         return 'sqr1'
 
-    elif sqr7 and not sqr8 and not sqr9 and not sqr1 :
+    elif (sqr7 == "O") and not sqr8 and not sqr9 and not sqr1 :
         return 'sqr9'
 
-    elif sqr9 and not sqr8 and not sqr7 and not sqr3 :
+    elif (sqr9 == "O") and not sqr8 and not sqr7 and not sqr3 :
         return 'sqr7'
     
-    elif sqr9 and not sqr3 and not sqr6 and not sqr7 :
+    elif (sqr9 == "O") and not sqr3 and not sqr6 and not sqr7 :
         return 'sqr3'
 
     else :
@@ -772,10 +774,14 @@ def save_game_state(request) :
     # Delete previous game state
     GameState.objects.filter(owner=user_id).delete()
 
+    created = timezone.now()
+
     # Save the state for this game
     state_obj = GameState(owner = user_id, sqrs = sqrs,\
             branch = session['branch'],\
-            step_num = session['step_num'], status = session['status'])
+            step_num = session['step_num'],\
+            status = session['status'],\
+            created = created)
 
     try:
         state_obj.save()
