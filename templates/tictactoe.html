@@ -2,6 +2,8 @@
 
 {% extends "base.html" %}
 
+{% load staticfiles %}
+
 {% block sidebar %}
 
     <form action="/tictactoe/new_game/" method="get"> {% csrf_token %}
@@ -11,7 +13,7 @@
 	<input type="submit" class="sidebar_menu_button" name="history" value="Game History">
     </form>
 
-{% endblock %}
+{% endblock %}{% load staticfiles %}
 
 {% block content %}
 
@@ -23,13 +25,13 @@
 	  text-align:center; 
 	  vertical-align:center; 
 	  display:inline-block;
-	  font-size:2em;                                                      
+	  font-size:3vw;                                                      
       } 
 
       #ttt_button_area {
 	  position:absolute; 
 	  left:32vw;
-	  top:16vw; 
+	  top:17vw; 
 	  width:23vw; 
 	  height:23vw;
 	  background:#EEEEEE;
@@ -38,21 +40,20 @@
       #ttt_status_area {
 	  position:absolute;
 	  left:32vw;
-	  top:41vw;
-	  width:22vw;
+	  top:42vw;
+	  width:52vw;
 	  height:auto;              
 	  background:#EEEEEE;
 	  padding-top: 0;
 	  font-style:italic;
-	  font-size:22px;
-	  text-align:left;
-	  padding-left:1em;
+	  font-size:20px;
+	  text-align:left;	  
       }
 
       #ttt_score_area {
 	  position:absolute;
 	  display:table;                  
-	  top:16vw;
+	  top:17vw;
 	  left:65vw;                                 
 	  width:22vw;
 	  height:20vw;
@@ -83,8 +84,8 @@
 
        <form action="" method="post"> {% csrf_token %}
 
-       <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
-
+       <script type="text/javascript" src="{% static 'tictactoe/jquery-1.11.1.min.js' %}"></script>
+       
        <script type="text/javascript"> 
 
 	   //
@@ -105,6 +106,13 @@
 	   function printStatus(status) {                                        
 	       document.getElementById("status_text").innerHTML = status;
 	   }
+
+           //
+           // Print New Game message
+           // 
+           function printNewGameMsg() {
+               document.getElementById("click_new_game").innerHTML = 'Click New Game to start a new game';
+           }
 
 	   //
 	   // Update stats panel with current game result
@@ -128,7 +136,7 @@
 
 		   // Exit the proc if there are outstanding server                           
 		   if (waitingForServerReply) {
-			return
+			return;
 		   }
 
 		   // Block all event handling until we get server reply 
@@ -152,12 +160,27 @@
 		       cache: false,
 		       timeout: 8000,
 		       success: function(data) {                                  
-			   status = data['status'].toUpperCase();
-			   next_step = data['computer_pressed']; 
+			   game_status = data['status'].toUpperCase(); 
+
+                           if ('game_over' in data) {
+                               if (game_status == "USER_WON") {                               
+			           printStatus('Game Over: You Won');
+                                   printNewGameMsg();    			           
+	  		       } else if (game_status == "USER_LOST") {                               
+			           printStatus('Game Over: You Lost');
+                                   printNewGameMsg();			                                          
+			       } else if (game_status == "DRAW") {
+			           printStatus('Game Over: Draw');
+                                   printNewGameMsg();			                                            
+                               }
+                               return;
+                           }
+                                                                                                    
+			   next_step = data['computer_pressed'];                            
 			   warning = '';
 			   if ('warning' in data) {
 			       warning = data['warning'];
-			   }
+			   }                           
 
                            // Mark the user clicked button with 'X'
        		           document.getElementById(usr_button_id).value = 'X';
@@ -170,9 +193,9 @@
 			   }
 
 			   // Update game stats in the stats panel                                   
-			   if (status == 'USER_WON' || 
-				   status == 'USER_LOST' || 
-				   status == 'DRAW') {
+			   if (game_status == 'USER_WON' || 
+				   game_status == 'USER_LOST' || 
+				   game_status == 'DRAW') {
 			       games_played = data['games_played'];                                       
 			       you_win = data['user_wins'];
 			       you_lose = data['computer_wins'];                                       
@@ -180,21 +203,25 @@
 			   }  
 
 			   // Show a popup when the game is finished
-			   if (status == "USER_WON") {                               
+			   if (game_status == "USER_WON") {                               
 			       printStatus('Game Over: You Won');
+                               printNewGameMsg();
 			       window.alert("You Win!");
-			   } else if (status == "USER_LOST") {
+			   } else if (game_status == "USER_LOST") {                               
 			       printStatus('Game Over: You Lost');
+                               printNewGameMsg();
 			       window.alert("You Lose!");                               
-			   } else if (status == "DRAW") {
+			   } else if (game_status == "DRAW") {
 			       printStatus('Game Over: Draw');
+                               printNewGameMsg();
 			       window.alert("Draw");
-			   } else if (status == "ERROR")  {
+			   } else if (game_status == "ERROR")  {
 			       errMsg = 'Error handling even on the server';
 			       printStatus(errMsg);
 			       window.alert(errMsg);
 			   } else if (warning) {
 			       window.alert(warning);
+                               printStatus('Your Turn...');
 			   } else {
 			       printStatus('Your Turn...'); 
 			   }
@@ -276,8 +303,9 @@
       </form>
    </div>
 
-   <div id = "ttt_status_area">
-	   <span id = "status_text"> Your turn... </span>           
+   <div id = "ttt_status_area">           
+	   <p> <span id = "status_text"> {{screen_status}} </span> </p>
+           <p> <span id = "click_new_game"> </span> </p>
    </div>
 
    <div id = "ttt_score_area">
