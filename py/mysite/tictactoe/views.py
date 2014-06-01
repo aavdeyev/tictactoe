@@ -154,39 +154,75 @@ def register_success(request) :
 
 @login_required
 def load_last_game(request) :
-    #-------------------------------------------------------------
-    #
-    # Check to see if we have any games in progress
-    #
-    #-------------------------------------------------------------
+     
+    if not request.session.get('status','') :
 
-    user_id = User.objects.get(username=request.user.username).id
-    games_saved = GameState.objects.filter(owner=user_id).count()
+        #----------------------------------------------------------
+        # Game stats don't exist, so we will either load the last
+        # saved game or, if there is none, create a new one
+        #----------------------------------------------------------
 
-    if games_saved :
-        #
-        # We have a game in progress
-        #
+        user_id = User.objects.get(username=request.user.username).id
+        games_saved = GameState.objects.filter(owner=user_id).count()
 
-        last_game = GameState.objects.get(owner=user_id)
+        if games_saved :
+            #
+            # We have a game saved
+            #
+
+            last_game = GameState.objects.get(owner=user_id)
         
-        request.session['step_num'] = last_game.step_num
-        request.session['status'] = last_game.status
-        request.session['branch'] = last_game.branch
+            request.session['step_num'] = last_game.step_num
+            request.session['status'] = last_game.status
+            request.session['branch'] = last_game.branch
 
-        sqrs = last_game.sqrs
-        for i in range(0, 9) :                       
-            request.session['sqr' + str(i+1)] = sqrs[i].strip()
+            sqrs = last_game.sqrs
+            for i in range(0, 9) :                       
+                request.session['sqr' + str(i+1)] = sqrs[i].strip()
 
-        #
-        # Update the number of user's and computer's wins
-        #
+            #
+            # Update the number of user's and computer's wins
+            #
 
-        game_stats = get_game_history_stats(request)
-        games_played = game_stats['games_played']
-        user_wins = game_stats['user_wins']
-        computer_wins = game_stats['computer_wins']
+            game_stats = get_game_history_stats(request)
+            games_played = game_stats['games_played']
+            user_wins = game_stats['user_wins']
+            computer_wins = game_stats['computer_wins']
 
+            status = request.session['status']
+
+            if status == "USER_LOST" :
+                screen_status = "You lost at " + str(last_game.created)
+            elif status == "USER_WON" :
+                screen_status = "You won at " + str(last_game.created)
+            elif status == "DRAW" :
+                screen_status = "Draw at" + str(last_game.created)
+            else :
+                screen_status = "Your turn..."
+                                
+            # Render the page to the browser                          
+            return render_to_response('tictactoe.html',\
+                    {'status' : status,\
+                    'screen_status' : screen_status,\
+                    'player' : request.user.username,\
+                    'games_played' : games_played,\
+                    'you_win' : user_wins,\
+                    'computer_wins' : computer_wins},\
+                    context_instance=RequestContext(request))
+        else :
+
+            #
+            # No saved games found, start a new game
+            #
+
+            return start_new_game(request)
+    else :
+
+        #-------------------------------------------------------
+        # Game status found. That means there is a game in progress.
+        # Let the user finish the game
+        #-------------------------------------------------------
+        
         status = request.session['status']
 
         if status == "USER_LOST" :
@@ -197,11 +233,13 @@ def load_last_game(request) :
             screen_status = "Draw at" + str(last_game.created)
         else :
             screen_status = "Your turn..."
-                   
-        #
+
+        game_stats = get_game_history_stats(request)
+        games_played = game_stats['games_played']
+        user_wins = game_stats['user_wins']
+        computer_wins = game_stats['computer_wins']
+
         # Render the page to the browser
-        # 
-             
         return render_to_response('tictactoe.html',\
                 {'status' : status,\
                 'screen_status' : screen_status,\
@@ -210,14 +248,7 @@ def load_last_game(request) :
                 'you_win' : user_wins,\
                 'computer_wins' : computer_wins},\
                 context_instance=RequestContext(request))
-    else :
-
-        #
-        # No history record found, start a new game
-        #
-
-        return start_new_game(request)    
-
+          
 ##################################################################
 #
 # This view will start a new game
@@ -318,7 +349,7 @@ def play_next_turn(request) :
                 result = step5(sqrs = sqrs, user_step4 = usr_pressed,\
                         branch = request.session['branch'])
                                         
-            computer_pressed = result['computer_pressed']                        
+            computer_pressed = result['computer_pressed']         
             warning = result.get('warning','')
 
             request.session['branch'] = result['branch']
