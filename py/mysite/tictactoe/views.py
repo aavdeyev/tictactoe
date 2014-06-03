@@ -190,20 +190,10 @@ def load_last_game(request) :
             computer_wins = game_stats['computer_wins']
 
             status = request.session['status']
-
-            if status == "USER_LOST" :
-                screen_status = "You lost at " + str(last_game.created)
-            elif status == "USER_WON" :
-                screen_status = "You won at " + str(last_game.created)
-            elif status == "DRAW" :
-                screen_status = "Draw at" + str(last_game.created)
-            else :
-                screen_status = "Your turn..."
-                                
+                                            
             # Render the page to the browser                          
             return render_to_response('tictactoe.html',\
                     {'status' : status,\
-                    'screen_status' : screen_status,\
                     'player' : request.user.username,\
                     'games_played' : games_played,\
                     'you_win' : user_wins,\
@@ -224,16 +214,7 @@ def load_last_game(request) :
         #-------------------------------------------------------
         
         status = request.session['status']
-
-        if status == "USER_LOST" :
-            screen_status = "You lost at " + str(last_game.created)
-        elif status == "USER_WON" :
-            screen_status = "You won at " + str(last_game.created)
-        elif status == "DRAW" :
-            screen_status = "Draw at" + str(last_game.created)
-        else :
-            screen_status = "Your turn..."
-
+  
         game_stats = get_game_history_stats(request)
         games_played = game_stats['games_played']
         user_wins = game_stats['user_wins']
@@ -242,7 +223,6 @@ def load_last_game(request) :
         # Render the page to the browser
         return render_to_response('tictactoe.html',\
                 {'status' : status,\
-                'screen_status' : screen_status,\
                 'player' : request.user.username,\
                 'games_played' : games_played,\
                 'you_win' : user_wins,\
@@ -257,7 +237,7 @@ def load_last_game(request) :
 
 @login_required
 def start_new_game(request) :
-
+  
     #----------------------------------------------------------
     # Clear the keys and reset status to 'continue'
     #----------------------------------------------------------
@@ -283,16 +263,13 @@ def start_new_game(request) :
     games_played = game_stats['games_played']
     user_wins = game_stats['user_wins']
     computer_wins = game_stats['computer_wins']
-
-    screen_status = "Your turn..."
-        
+      
     #---------------------------------------------------------------
     # Render the clean HTML page to the browser        
     #---------------------------------------------------------------
 
     return render_to_response('tictactoe.html',\
             {'status' : request.session['status'],\
-            'screen_status' : screen_status,\
             'player' : request.user.username,\
             'games_played' : games_played,\
             'you_win' : user_wins,\
@@ -391,7 +368,7 @@ def play_next_turn(request) :
                 client_msg['warning'] = warning
                            
             json_reply = json.dumps(client_msg)
-                          
+                                      
             # Send JSON back to the browser
             return HttpResponse(json_reply, content_type='application/json')
 
@@ -454,23 +431,13 @@ def back_to_game(request) :
     computer_wins = game_stats['computer_wins']
 
     status = request.session['status']
-
-    if status == "USER_LOST" :
-        screen_status = "You lost "
-    elif status == "USER_WON" :
-        screen_status = "You won"
-    elif status == "DRAW" :
-        screen_status = "Draw"
-    else :
-        screen_status = "Your turn..."
-        
+       
     #---------------------------------------------------------------
     # Render the page to the browser
     #---------------------------------------------------------------
 
     return render_to_response('tictactoe.html',\
             {'status' : request.session['status'],\
-            'screen_status' : screen_status,\
             'player' : request.user.username,\
             'games_played' : games_played,\
             'you_win' : user_wins,\

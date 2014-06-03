@@ -99,9 +99,7 @@
 	   if (!window.jQuery) {    
 	       alert("JQuery not loaded");
 	   }
-
            
-
 	   //
 	   // Update status panel with current status
 	   //
@@ -209,43 +207,53 @@
 			       document.getElementById(next_step).value="O";
 			   }
 
-			   // Update game stats in the stats panel                                   
+			   // Update game stats in the stats panel                   
 			   if (game_status == 'USER_WON' || 
 				   game_status == 'USER_LOST' || 
 				   game_status == 'DRAW') {
-			       games_played = data['games_played'];                                       
+			       games_played = data['games_played'];
 			       you_win = data['user_wins'];
-			       you_lose = data['computer_wins'];                                       
+			       you_lose = data['computer_wins'];
 			       printStats(games_played,you_win,you_lose);
-			   }  
+			   } 
 
-			   // Show a popup when the game is finished
-			   if (game_status == "USER_WON") {                               
-			       printStatus('Game Over: You Won');
-                               printNewGameMsg();
-			       window.alert("You Win!");
+                           // Display warning if any
+                           if (warning) {
+			       window.alert(warning);                               
+                           }
+
+                           // Disable Tic-Tac-Toe buttuns if game status
+                           // is not 'USER_CONTINUE'
+                           if (game_status != 'USER_CONTINUE') {
                                disableTTTButtons();
-			   } else if (game_status == "USER_LOST") {                               
-			       printStatus('Game Over: You Lost');
-                               printNewGameMsg();
-			       window.alert("You Lose!");
-                               disableTTTButtons();                               
-			   } else if (game_status == "DRAW") {
-			       printStatus('Game Over: Draw');
-                               printNewGameMsg();
-			       window.alert("Draw");
-                               disableTTTButtons();
-			   } else if (game_status == "ERROR")  {
-			       errMsg = 'Error handling even on the server';
-			       printStatus(errMsg);
-			       window.alert(errMsg);
-			   } else if (warning) {
-			       window.alert(warning);
-                               printStatus('Your Turn...');
-			   } else {
-			       printStatus('Your Turn...'); 
+                           }
+                                                      
+			   // Show game status
+                           switch(game_status) {
+                               case 'USER_WON' :			   
+  			           printStatus('Game Over: You Won');
+                                   printNewGameMsg();
+			           window.alert("You Win!");
+                                   break;
+			       case 'USER_LOST' :
+   			           printStatus('Game Over: You Lost');
+                                   printNewGameMsg();
+			           window.alert("You Lose!");                                    
+                                   break;                             
+			       case 'DRAW' :
+  			           printStatus('Game Over: Draw');
+                                   printNewGameMsg();
+			           window.alert("Draw");
+                                   break;
+			       case 'ERROR' :
+ 			           errMsg = 'Error handling Ajax on the server';
+			           printStatus(errMsg);
+			           window.alert(errMsg);
+                                   break;
+                               case 'USER_CONTINUE' :
+                                   printStatus('Your Turn...');
 			   }
-
+			   
 			   // Unblock event handling
 			   waitingForServerReply = false;
 		       },
@@ -260,16 +268,44 @@
 	       }                                                      
 	   }
 
-	   //
-	   // Assign event handlers to buttons
-	   //
 	   $(document).ready(function() {
 
+               //
                // No game in progress, disable the buttons
+               //
+
                if ('{{request.session.status}}' != 'USER_CONTINUE') {
                    disableTTTButtons();
                }
+               
+               //
+               // Display current game status
+               // 
 
+               switch('{{request.session.status}}') {
+                   case 'USER_CONTINUE' :
+                       printStatus('Your Turn...');
+                       break;
+                   case 'USER_WON' :
+                       printStatus('You won');
+                       printNewGameMsg();
+                       break;
+                   case 'USER_LOST' :
+                       printStatus('You lost');
+                       printNewGameMsg();
+                       break;
+                   case 'DRAW' :
+                       printStatus('Draw');
+                       printNewGameMsg();
+                       break;
+                   default :
+                       printStatus('Error loading game status');
+               }
+                      
+	       //
+	       // Assign event handlers to buttons
+	       //
+    
 	       $('#sqr1').click(function () {
 		   onTTTButtonClick('sqr1');
 	       }); 
@@ -285,8 +321,7 @@
 	       $('#sqr4').click(function () {
 		   onTTTButtonClick('sqr4')
 	       });
-
-	       //
+	       
 	       // No handler for sqr5 here since it is
 	       // always pressed by the computer in
 	       // the first step
@@ -329,7 +364,7 @@
    </div>
 
    <div id = "ttt_status_area">           
-	   <p> <span id = "status_text"> {{screen_status}} </span> </p>
+	   <p> <span id = "status_text"> </span> </p>
            <p> <span id = "click_new_game"> </span> </p>
    </div>
 
