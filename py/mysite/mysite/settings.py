@@ -25,7 +25,7 @@ DEBUG = False
 
 TEMPLATE_DEBUG = False
 
-ALLOWED_HOSTS = ['aavdeyev-ubuntu1.noip.me']
+ALLOWED_HOSTS = ['aavdeyev-ubuntu1.noip.me','localhost']
 
 TEMPLATE_DIRS = (
     '/var/www/py/templates',

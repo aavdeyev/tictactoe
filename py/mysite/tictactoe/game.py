@@ -2,8 +2,6 @@ from django.contrib.auth.models import User
 
 from tictactoe.models import History, GameState
 
-from django.utils import timezone
-
 #######################################################################
 #
 #  Computer generated step 2 of the game
@@ -774,14 +772,14 @@ def save_game_state(request) :
     # Delete previous game state
     GameState.objects.filter(owner=user_id).delete()
 
-    created = timezone.now()
+    created_print_str = session.get("created_print_str","")
            
     # Save the state for this game
     state_obj = GameState(owner = user_id, sqrs = sqrs,\
             branch = session['branch'],\
             step_num = session['step_num'],\
             status = session['status'],\
-            created = created)
+            created = created_print_str)
 
     try:
         state_obj.save()

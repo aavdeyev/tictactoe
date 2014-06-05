@@ -20,8 +20,8 @@
     <style type="text/css"> 
 
       .ttt_button {
-	  width:7vw;
-	  height:7vw;
+	  width:7.6vw;
+	  height:7.6vw;
 	  text-align:center; 
 	  vertical-align:center; 
 	  display:inline-block;
@@ -30,16 +30,16 @@
  
       #ttt_button_area {
 	  position:absolute; 
-	  left:32vw;
+	  left:33vw;
 	  top:17vw; 
-	  width:23vw; 
-	  height:23vw;
+	  width:27vw; 
+	  height:27vw;
 	  background:#EEEEEE;
       }
 
       #ttt_status_area {
 	  position:absolute;
-	  left:32vw;
+	  left:33vw;
 	  top:42vw;
 	  width:52vw;
 	  height:10vw;              
@@ -54,9 +54,10 @@
 	  position:absolute;
 	  display:table;                  
 	  top:17vw;
-	  left:65vw;                                 
+	  left:68vw;                                 
 	  width:22vw;
-	  height:20vw;
+	  height:22vw;
+          line-height:1.1vw;
 	  text-align:center;
 	  background:#EEEEEE;
 	  border-radius:20px;
@@ -370,6 +371,8 @@
 
    <div id = "ttt_score_area">
        <div id = "ttt_inner_score_area">
+           <p> Game Started:  </p>
+           <p> {{request.session.created_print_str}} </p>     
 	   <p> Games Played: <span id = "games_played"> {{games_played}} </span> </p>
 	   <p> You Win: <span id = "you_win"> {{you_win}} </span> </p>
 	   <p> Computer Wins: <span id = "you_lose"> {{computer_wins}} </span> </p>             

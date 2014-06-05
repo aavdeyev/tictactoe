@@ -26,6 +26,8 @@ from tictactoe.models import History, GameState
 
 from game import *
 
+import datetime
+
 import json
 
 ##################################################################
@@ -175,6 +177,8 @@ def load_last_game(request) :
             request.session['step_num'] = last_game.step_num
             request.session['status'] = last_game.status
             request.session['branch'] = last_game.branch
+            request.session['created_print_str'] =\
+                    str(last_game.created)
 
             sqrs = last_game.sqrs
             for i in range(0, 9) :                       
@@ -254,7 +258,15 @@ def start_new_game(request) :
 
     request.session['status'] = 'USER_CONTINUE'
     request.session['branch'] = ''
-    
+
+    # Save game start time
+    now = datetime.datetime.now()
+    request.session['created'] = str(now)
+
+    # This will be the formatted display start time
+    print_time = now.strftime("%Y-%m-%d %H:%M:%S")
+    request.session['created_print_str'] = print_time 
+
     #---------------------------------------------------------------
     # Update the number of user's and computer's wins
     #---------------------------------------------------------------
@@ -263,11 +275,11 @@ def start_new_game(request) :
     games_played = game_stats['games_played']
     user_wins = game_stats['user_wins']
     computer_wins = game_stats['computer_wins']
-      
+          
     #---------------------------------------------------------------
     # Render the clean HTML page to the browser        
     #---------------------------------------------------------------
-
+        
     return render_to_response('tictactoe.html',\
             {'status' : request.session['status'],\
             'player' : request.user.username,\
@@ -339,7 +351,8 @@ def play_next_turn(request) :
             #----------------------------------------------------------
  
             if request.session['status'] != 'USER_CONTINUE' :            
-                owner = User.objects.get(username=request.user.username).id 
+                owner =\
+                    User.objects.get(username=request.user.username).id
                 created = timezone.now()
                   
                 h = History(owner = owner, created = created,\
