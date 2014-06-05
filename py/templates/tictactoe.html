@@ -27,7 +27,7 @@
 	  display:inline-block;
 	  font-size:3vw;                                                      
       } 
-
+ 
       #ttt_button_area {
 	  position:absolute; 
 	  left:32vw;
@@ -61,14 +61,14 @@
 	  background:#EEEEEE;
 	  border-radius:20px;
 	  border-style:solid;
-	  border-width:4px;
+	  border-width:0.4vw;
 	  border-color:#888;
 	  box-shadow:
-	    inset 0 0 0 4px #999,
-	    inset 0 0 0 8px #aaa,
-	    inset 0 0 0 16px #bbb,
-	    inset 0 0 0 20px #ccc,
-	    inset 0 0 0 20px #ddd;                                  
+	    inset 0 0 0 0.4vw #999,
+	    inset 0 0 0 0.8vw #aaa,
+	    inset 0 0 0 1.2vw #bbb,
+	    inset 0 0 0 1.6vw #ccc,
+	    inset 0 0 0 2.0vw #ddd;                                  
       }
 
       #ttt_inner_score_area {
@@ -79,7 +79,7 @@
        }
 
   </style>
-
+  
   <div id = "ttt_button_area">
 
        <form action="" method="post"> {% csrf_token %}
