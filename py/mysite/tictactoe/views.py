@@ -68,7 +68,7 @@ def login(request) :
                 if query_string :
                     redirect_url = query_string.replace('next=', '')
                 else :
-                    redirect_url = '/tictactoe/load_last_game/'
+                    redirect_url = '/tictactoe/load_game/'
                 
                 return HttpResponseRedirect(redirect_url)   
     else:
@@ -150,12 +150,12 @@ def register_success(request) :
 
 ##################################################################
 #
-# This view will load the last saved game
+# This view will load the last saved game or reload the current game
 #
 ###################################################################
 
 @login_required
-def load_last_game(request) :
+def load_game(request) :
      
     if not request.session.get('status','') :
 
@@ -214,7 +214,7 @@ def load_last_game(request) :
 
         #-------------------------------------------------------
         # Game status found. That means there is a game in progress.
-        # Let the user finish the game
+        # Reload the current game
         #-------------------------------------------------------
         
         status = request.session['status']
@@ -267,27 +267,9 @@ def start_new_game(request) :
     print_time = now.strftime("%Y-%m-%d %H:%M:%S")
     request.session['created_print_str'] = print_time 
 
-    #---------------------------------------------------------------
-    # Update the number of user's and computer's wins
-    #---------------------------------------------------------------
-
-    game_stats = get_game_history_stats(request)
-    games_played = game_stats['games_played']
-    user_wins = game_stats['user_wins']
-    computer_wins = game_stats['computer_wins']
-          
-    #---------------------------------------------------------------
-    # Render the clean HTML page to the browser        
-    #---------------------------------------------------------------
-        
-    return render_to_response('tictactoe.html',\
-            {'status' : request.session['status'],\
-            'player' : request.user.username,\
-            'games_played' : games_played,\
-            'you_win' : user_wins,\
-            'computer_wins' : computer_wins},\
-            context_instance=RequestContext(request))
-            
+    # Load the new game
+    return HttpResponseRedirect('/tictactoe/load_game/')
+                
 ###################################################################
 #
 # The main view to handle user's mouse clicks during the game.

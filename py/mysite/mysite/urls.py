@@ -13,6 +13,6 @@ urlpatterns = patterns('',
     url(r'^accounts/register/$', 'tictactoe.views.register_user'),
     url(r'^accounts/register_success/$', 'tictactoe.views.register_success'),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^tictactoe/$', 'tictactoe.views.load_last_game'),
+    url(r'^tictactoe/$', 'tictactoe.views.load_game'),
     url(r'^tictactoe/', include('tictactoe.urls')),
 )
