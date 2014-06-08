@@ -56,7 +56,7 @@ def login(request) :
         
             form = AuthenticationForm(None, request.POST)
            
-            if form.is_valid() :                
+            if form.is_valid() :               
                 # Log the user in
                 auth.login(request, form.get_user())
                                 
@@ -89,15 +89,18 @@ def login(request) :
 #################################################################
 
 def logout(request) :
-    
+
     error = ''
-
-    # Save game state in a database. If fails, set error to display
-    # in the logout page
-    result = save_game_state(request)
-    if not result['success'] :         
-        error = result['error']
-
+            
+    query_string = request.META.get('QUERY_STRING')
+    
+    if query_string == 'savegame' :
+        # Save game state in a database. If fails, set error to 
+        # display in the logout page
+        result = save_game_state(request)
+        if not result['success'] :         
+            error = result['error']        
+            
     auth.logout(request)
     return render_to_response('logout.html', {'error' : error})
 
@@ -156,6 +159,11 @@ def register_success(request) :
 
 @login_required
 def load_game(request) :
+
+    game_stats = get_game_history_stats(request)
+    request.session['games_played'] = game_stats['games_played']
+    request.session['user_wins'] = game_stats['user_wins']
+    request.session['computer_wins'] = game_stats['computer_wins']
      
     if not request.session.get('status','') :
 
@@ -166,11 +174,6 @@ def load_game(request) :
 
         user_id = User.objects.get(username=request.user.username).id
         games_saved = GameState.objects.filter(owner=user_id).count()
-
-        game_stats = get_game_history_stats(request)
-        request.session['games_played'] = game_stats['games_played']
-        request.session['user_wins'] = game_stats['user_wins']
-        request.session['computer_wins'] = game_stats['computer_wins']
 
         if games_saved :
             #
@@ -236,6 +239,13 @@ def load_game(request) :
 
 @login_required
 def start_new_game(request) :
+
+    #----------------------------------------------------------
+    # Clear game state
+    #----------------------------------------------------------
+
+    user_id = User.objects.get(username=request.user.username).id
+    GameState.objects.filter(owner=user_id).delete()
   
     #----------------------------------------------------------
     # Clear the keys and reset status to 'continue'

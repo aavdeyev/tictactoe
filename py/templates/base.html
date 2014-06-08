@@ -170,6 +170,8 @@
     
 </style>
 
+<!-- Load JQuery -->
+
 <script type="text/javascript" src="{% static 'tictactoe/jquery-1.11.1.min.js' %}"> </script>
 
 </head>
@@ -189,8 +191,7 @@
 
             {% if user.is_authenticated %}                
                 Mode: single player &nbsp; | &nbsp; 
-                Player: {{player}} &nbsp;&nbsp; | &nbsp <a href = "/accounts/logout" id="logout_ref">
-                    logout </a>                
+                Player: {{player}} &nbsp;&nbsp; | &nbsp <a href = "javascript:;" id = "logout_ref"> logout </a>                
             {% endif %}
 
            </h3>
@@ -217,5 +218,26 @@
 {% block extension %}
 {% endblock %}
 
+<!-- Define logout handler -->
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+                      
+        //
+	// Show yes/no popup on logout click
+	//
+    
+	$('#logout_ref').click(function () {
+	    if (window.confirm('Save current game?')) {
+                window.location = '/accounts/logout/?savegame'
+            } else {
+                window.location = '/accounts/logout/'
+            }
+	});
+    }); 
+
+</script>
+	       
 </body>
 
