@@ -410,13 +410,18 @@ def clear_history(request) :
 
 @login_required
 def back_to_game(request) :
+
+    status = request.session['status']
              
     #---------------------------------------------------------------
     # Update the number of user's and computer's wins
     #---------------------------------------------------------------
-
-    status = request.session['status']
-       
+    
+    game_stats = get_game_history_stats(request)
+    request.session['games_played'] = game_stats['games_played']
+    request.session['user_wins'] = game_stats['user_wins']
+    request.session['computer_wins'] = game_stats['computer_wins']
+           
     #---------------------------------------------------------------
     # Render the page to the browser
     #---------------------------------------------------------------

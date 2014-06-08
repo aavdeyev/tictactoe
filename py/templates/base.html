@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 
+{% load staticfiles %}
+
 <head>
 
 <title> Tic-Tac-Toe </title>
@@ -168,6 +170,8 @@
     
 </style>
 
+<script type="text/javascript" src="{% static 'tictactoe/jquery-1.11.1.min.js' %}"> </script>
+
 </head>
 
 <body>
@@ -185,7 +189,7 @@
 
             {% if user.is_authenticated %}                
                 Mode: single player &nbsp; | &nbsp; 
-                Player: {{player}} &nbsp;&nbsp; | &nbsp <a href = "/accounts/logout"> 
+                Player: {{player}} &nbsp;&nbsp; | &nbsp <a href = "/accounts/logout" id="logout_ref">
                     logout </a>                
             {% endif %}
 

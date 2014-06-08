@@ -2,8 +2,6 @@
 
 {% extends "base.html" %}
 
-{% load staticfiles %}
-
 {% block sidebar %}
 
     <form action="/tictactoe/new_game/" method="get"> {% csrf_token %}
@@ -84,8 +82,6 @@
   <div id = "ttt_button_area">
 
        <form action="" method="post"> {% csrf_token %}
-
-       <script type="text/javascript" src="{% static 'tictactoe/jquery-1.11.1.min.js' %}"></script>
        
        <script type="text/javascript"> 
 
