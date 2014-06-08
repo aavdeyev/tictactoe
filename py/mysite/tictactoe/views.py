@@ -167,6 +167,11 @@ def load_game(request) :
         user_id = User.objects.get(username=request.user.username).id
         games_saved = GameState.objects.filter(owner=user_id).count()
 
+        game_stats = get_game_history_stats(request)
+        request.session['games_played'] = game_stats['games_played']
+        request.session['user_wins'] = game_stats['user_wins']
+        request.session['computer_wins'] = game_stats['computer_wins']
+
         if games_saved :
             #
             # We have a game saved
@@ -187,21 +192,16 @@ def load_game(request) :
             #
             # Update the number of user's and computer's wins
             #
-
-            game_stats = get_game_history_stats(request)
-            games_played = game_stats['games_played']
-            user_wins = game_stats['user_wins']
-            computer_wins = game_stats['computer_wins']
-
+  
             status = request.session['status']
                                             
             # Render the page to the browser                          
             return render_to_response('tictactoe.html',\
                     {'status' : status,\
                     'player' : request.user.username,\
-                    'games_played' : games_played,\
-                    'you_win' : user_wins,\
-                    'computer_wins' : computer_wins},\
+                    'games_played' : request.session['games_played'],\
+                    'you_win' : request.session['user_wins'],\
+                    'computer_wins' : request.session['computer_wins']},\
                     context_instance=RequestContext(request))
         else :
 
@@ -218,19 +218,14 @@ def load_game(request) :
         #-------------------------------------------------------
         
         status = request.session['status']
-  
-        game_stats = get_game_history_stats(request)
-        games_played = game_stats['games_played']
-        user_wins = game_stats['user_wins']
-        computer_wins = game_stats['computer_wins']
-
+   
         # Render the page to the browser
         return render_to_response('tictactoe.html',\
                 {'status' : status,\
                 'player' : request.user.username,\
-                'games_played' : games_played,\
-                'you_win' : user_wins,\
-                'computer_wins' : computer_wins},\
+                'games_played' : request.session['games_played'],\
+                'you_win' : request.session['user_wins'],\
+                'computer_wins' : request.session['computer_wins']},\
                 context_instance=RequestContext(request))
           
 ##################################################################
@@ -420,11 +415,6 @@ def back_to_game(request) :
     # Update the number of user's and computer's wins
     #---------------------------------------------------------------
 
-    game_stats = get_game_history_stats(request)
-    games_played = game_stats['games_played']
-    user_wins = game_stats['user_wins']
-    computer_wins = game_stats['computer_wins']
-
     status = request.session['status']
        
     #---------------------------------------------------------------
@@ -434,9 +424,9 @@ def back_to_game(request) :
     return render_to_response('tictactoe.html',\
             {'status' : request.session['status'],\
             'player' : request.user.username,\
-            'games_played' : games_played,\
-            'you_win' : user_wins,\
-            'computer_wins' : computer_wins},\
+            'games_played' : request.session['games_played'],\
+            'you_win' : request.session['user_wins'],\
+            'computer_wins' : request.session['computer_wins']},\
             context_instance=RequestContext(request))
 
     
