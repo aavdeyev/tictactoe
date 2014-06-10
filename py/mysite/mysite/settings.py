@@ -21,9 +21,9 @@ LOGIN_URL = '/accounts/login/'
 SECRET_KEY = '14+4&)*6pwg3g9*vbefcqghjl5vl&f$8#xu=a@iij)jsm!2z^6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-TEMPLATE_DEBUG = False
+TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = ['aavdeyev-ubuntu1.noip.me','localhost']
 
