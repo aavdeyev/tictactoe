@@ -8,6 +8,10 @@ import unittest, time, re
 from selenium.webdriver.common.keys import Keys
 from django.test import LiveServerTestCase
 
+########################################################
+# Test case to test draw
+########################################################
+
 class DrawTest1(LiveServerTestCase):
     
     fixtures = ['admin.json']
@@ -62,6 +66,10 @@ class DrawTest1(LiveServerTestCase):
     def tearDown(self):
         self.driver.quit()
         self.assertEqual([], self.verificationErrors)
+
+###########################################################
+# Test case to test losing game
+###########################################################
 
 class Lose(unittest.TestCase):
     def setUp(self):
