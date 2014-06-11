@@ -61,12 +61,19 @@
         text-shadow: 0px 3px 9px #BBBBBB;
     }
 
+    #header_right_table {
+        width:97%;
+    }
+
+    .header_right_td {
+         text-align:center; 
+         padding:0.5vw;        
+         border-left:ridge;
+         border-right:ridge;
+    }
+
     #header_right_font {
-        font-size:2vw;
-        text-align:right;
-        padding-right:1em;        
-        text-align:right;
-        padding-right:1em;
+        font-size:2vw;                      
     }
 
     #sidebar {
@@ -188,15 +195,31 @@
                Tic-Tac-Toe
             </h1>
         </div>
+
         <div id="header_right">
+ 
+        {% if user.is_authenticated %}
+
             <h3 id="header_right_font">
 
-            {% if user.is_authenticated %}                
-                Mode: single player &nbsp; | &nbsp; 
-                Player: {{player}} &nbsp;&nbsp; | &nbsp <a href = "javascript:;" id = "logout_ref"> logout </a>                
-            {% endif %}
+              <table id="header_right_table">
+              <tr>
+                <td class="header_right_td"> 
+                    Mode: single player 
+                </td>
+                <td class="header_right_td">
+                    Player: {{player}}
+                </td>
+                <td class="header_right_td">
+                    <a href = "javascript:;" id = "logout_ref"> logout </a>
+                </td>
+              </tr>
+              </table>
 
-           </h3>
+            </h3>
+
+        {% endif %}
+          
         </div>         
     </div> 
 
